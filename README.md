@@ -11,6 +11,10 @@ For (Ubuntu) script, see `server-setup.sh`
     - Mac: `brew install imagemagick`
     - Ubuntu: `apt-get install libmagickwand-dev`
 - `pip3 install -r ./requirements.txt`
+- set up configs (these vary per environment and contains access keys so are NOT checked into version control)
+  - `cp config.sample.yml config.yml` then edit `config.yml` as necessary.
+  - `cp configloggly.sample.conf config-loggly.conf` and edit `config-loggly.conf` as needed.
+  - `cp frontend/.sample-env frontend/.env` and edit `.env` as needed.
 - frontend `cd frontend && flutter build web` (for frontend)
 - setup config (see configuration section in `server-setup.sh`)
 
@@ -24,7 +28,7 @@ For (Ubuntu) script, see `server-setup.sh`
 
 Create accounts and add api keys in configs for each:
 - database: mongodb - free tier on AtlasDB
-- email: free tier on mailchimp
+- email: free tier on mailchimp or sendgrid
 - logging: free tier on loggly
 
 
