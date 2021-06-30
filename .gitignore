@@ -1,0 +1,15 @@
+.DS_Store
+
+__pycache__
+
+debug.log
+error.log
+
+config.yml
+config-*.yml
+
+config-*.conf
+
+.env*
+
+uploads

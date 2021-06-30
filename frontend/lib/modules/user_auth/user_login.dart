@@ -1,0 +1,155 @@
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../app_scaffold.dart';
+import '../../common/socket_service.dart';
+import './user_class.dart';
+import '../../common/form_input/input_fields.dart';
+import './current_user_state.dart';
+
+class UserLoginComponent extends StatefulWidget {
+  @override
+  _UserLoginState createState() => _UserLoginState();
+}
+
+class _UserLoginState extends State<UserLoginComponent> {
+  List<String> _routeIds = [];
+  SocketService _socketService = SocketService();
+  InputFields _inputFields = InputFields();
+
+  final _formKey = GlobalKey<FormState>();
+  final _formFieldKeyEmail = GlobalKey<FormFieldState>();
+  bool _autoValidate = false;
+  var formVals = {};
+  bool _loading = false;
+  String _message = '';
+
+  @override
+  void initState() {
+    super.initState();
+
+    _routeIds.add(_socketService.onRoute('login', callback: (String resString) {
+      var res = json.decode(resString);
+      var data = res['data'];
+      if (data['valid'] == 1 && data.containsKey('user')) {
+        var user = UserClass.fromJson(data['user']);
+        if (user.id.length > 0) {
+          Provider.of<CurrentUserState>(context, listen: false).setCurrentUser(user);
+          Navigator.pushNamed(context, '/home');
+        } else {
+          setState(() { _message = data['msg'].length > 0 ? data['msg'] : 'Invalid login, please try again'; });
+        }
+      } else {
+        setState(() { _message = data['msg'].length > 0 ? data['msg'] : 'Invalid login, please try again'; });
+      }
+      setState(() { _loading = false; });
+    }));
+
+    _routeIds.add(_socketService.onRoute('forgotPassword', callback: (String resString) {
+      var res = jsonDecode(resString);
+      var data = res['data'];
+      String message = 'No matching email found.';
+      if (data['valid'] == 1) {
+        message = 'Check your email to reset your password.';
+      }
+      setState(() { _message = message; });
+      setState(() { _loading = false; });
+    }));
+  }
+
+  Widget _buildSubmitButtons(var context) {
+    if (_loading) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16.0),
+        child: LinearProgressIndicator(
+        ),
+      );
+    }
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16.0),
+      child: Row(
+        children: <Widget> [
+          ElevatedButton(
+            onPressed: () {
+              setState(() { _message = ''; });
+              if (_formKey.currentState.validate()) {
+                setState(() { _loading = true; });
+                _formKey.currentState.save();
+                _socketService.emit('login', formVals);
+              } else {
+                setState(() { _loading = false; });
+                setState(() { _autoValidate = true; });
+              }
+            },
+            child: Text('Log In'),
+          ),
+          SizedBox(width: 15),
+          ElevatedButton(
+            onPressed: () {
+              setState(() { _message = ''; });
+              if (_formFieldKeyEmail.currentState.validate()) {
+                setState(() { _loading = true; });
+                _formKey.currentState.save();
+                _socketService.emit('forgotPassword', { 'email': formVals['email'] });
+              } else {
+                setState(() { _loading = false; });
+                setState(() { _autoValidate = true; });
+              }
+            },
+            child: Text('Forgot Password'),
+          ),
+        ]
+      ),
+    );
+  }
+
+  Widget _buildMessage(var context) {
+    if (_message.length > 0) {
+      return Text(_message);
+    }
+    return Container();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AppScaffoldComponent(
+      body: ListView(
+        children: [
+          Align(
+            alignment: Alignment.center,
+            child: Container(
+              width: 600,
+              padding: const EdgeInsets.only(top: 20, left: 10, right: 10),
+              child: Form(
+                key: _formKey,
+                autovalidate: _autoValidate,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    _inputFields.inputEmail(context, formVals, 'email', fieldKey: _formFieldKeyEmail),
+                    _inputFields.inputPassword(context, formVals, 'password', minLen: 6),
+                    _buildSubmitButtons(context),
+                    _buildMessage(context),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/signup');
+                      },
+                      child: Text('No account? Sign up.'),
+                    ),
+                  ]
+                ),
+              ),
+            ),
+          )
+        ]
+      )
+    );
+  }
+
+  @override
+  void dispose() {
+    _socketService.offRouteIds(_routeIds);
+    super.dispose();
+  }
+}

@@ -1,0 +1,24 @@
+- pipeline: "build"
+  trigger_mode: "ON_EVERY_PUSH"
+  ref_name: "master"
+  ref_type: "BRANCH"
+  priority: "NORMAL"
+  fail_on_prepare_env_warning: true
+  trigger_condition: "ALWAYS"
+  actions:
+    - action: "[157.245.230.34] Execute:     systemctl restart systemd_web_server.service"
+      type: "SSH_COMMAND"
+      login: "root"
+      host: "157.245.230.34"
+      port: "22"
+      env_key: "secure!6VJM9Is6ZkhJ4mrEg7VXiw==.PCqMpSqWLEhGw77YXyJnPA=="
+      authentication_mode: "ENV_KEY"
+      commands:
+      - "cd /var/www/seed_app && \\"
+      - "    git pull origin master && \\"
+      - "    pip3 install -r ./requirements.txt && \\"
+      - "    cd frontend && flutter build web && cd ../ && \\"
+      - "    systemctl restart systemd_web_server.service"
+      trigger_condition: "ALWAYS"
+      run_as_script: true
+      shell: "BASH"
