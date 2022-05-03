@@ -1,9 +1,11 @@
-# Seed App
+# seed_app
 
 Python (with sockets) + MongoDB + Flutter
 
 
 ## Setup
+
+- Replace all instances of `seed_app`, `seed-app` and `seedApp` with the name / path of your app.
 
 For (Ubuntu) script, see `server-setup.sh`
 
@@ -27,7 +29,7 @@ For (Ubuntu) script, see `server-setup.sh`
 ### SSL (HTTPS) with letsencrypt
 
 - Run on server without SSL (set config.yml and frontend/.env to http only)
-- `certbot certonly --webroot` (just use /var/www/seed-app for the webroot, though not sure if this matters?)
+- `certbot certonly --webroot` (just use /var/www/seed_app for the webroot, though not sure if this matters?)
 - Update config.yml and frontend.env to use https (and add the path to the generated SSL files)
 
 

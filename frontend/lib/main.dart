@@ -86,7 +86,7 @@ class _MyApp extends State<MyApp> {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Seed App',
+      title: 'seed_app',
       onGenerateRoute: AppRouter.router.generator,
       theme: ThemeData(
         // https://paletton.com/#uid=53i0u0kDJDJiVIJpYEuFjqdJVjp

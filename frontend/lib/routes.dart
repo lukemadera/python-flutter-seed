@@ -9,6 +9,7 @@ import './modules/user_auth/user_login.dart';
 import './modules/user_auth/user_logout.dart';
 import './modules/user_auth/user_password_reset.dart';
 import './modules/user_auth/user_signup.dart';
+import '../common/route_service.dart';
 
 class AppRouter {
   static FluroRouter router = FluroRouter.appRouter;
@@ -75,6 +76,7 @@ class AppRoutes {
 }
 
 class RouteNotFoundPage extends StatelessWidget {
+  RouteService _routeService = RouteService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,7 +93,7 @@ class RouteNotFoundPage extends StatelessWidget {
               //  clearStack: true,
               //  transition: TransitionType.none,
               //),
-              onPressed: () => Navigator.pushNamed(context, '/home'),
+              onPressed: () => _routeService.goHome(context),
               child: Text("Go Home"),
             )
           ],
@@ -107,12 +109,13 @@ class ReRoutePage extends StatefulWidget {
 }
 
 class _ReRouteState extends State<ReRoutePage> {
+  RouteService _routeService = RouteService();
   @override
   void initState() {
     super.initState();
 
     Timer(Duration(milliseconds: 100), () {
-      Navigator.pushNamed(context, '/home');
+      _routeService.goHome(context);
     });
   }
 

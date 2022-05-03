@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../app_scaffold.dart';
+import '../../common/route_service.dart';
 import '../../common/socket_service.dart';
 import './user_class.dart';
 import '../../common/form_input/input_fields.dart';
@@ -15,6 +16,7 @@ class UserLoginComponent extends StatefulWidget {
 
 class _UserLoginState extends State<UserLoginComponent> {
   List<String> _routeIds = [];
+  RouteService _routeService = RouteService();
   SocketService _socketService = SocketService();
   InputFields _inputFields = InputFields();
 
@@ -35,7 +37,7 @@ class _UserLoginState extends State<UserLoginComponent> {
         var user = UserClass.fromJson(data['user']);
         if (user.id.length > 0) {
           Provider.of<CurrentUserState>(context, listen: false).setCurrentUser(user);
-          Navigator.pushNamed(context, '/home');
+          _routeService.goHome(context);
         } else {
           setState(() { _message = data['msg'].length > 0 ? data['msg'] : 'Invalid login, please try again'; });
         }

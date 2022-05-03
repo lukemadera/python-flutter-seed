@@ -11,7 +11,7 @@ def Restart(doRestart = 1):
       thread.start()
 
 def RestartIt():
-    os.system("cd /var/www/seed-app && \
+    os.system("cd /var/www/seed_app && \
         git checkout . && git pull origin master && \
         pip3 install -r ./requirements.txt && \
         flutter upgrade && \
