@@ -47,7 +47,6 @@ class _UserLogoutState extends State<UserLogoutComponent> {
 
   @override
   Widget build(BuildContext context) {
-    //var currentUserState = context.watch<CurrentUserState>();
     return AppScaffoldComponent(
       body: ListView(
         children: [
@@ -55,7 +54,7 @@ class _UserLogoutState extends State<UserLogoutComponent> {
             alignment: Alignment.center,
             child: Container(
               width: 600,
-              padding: const EdgeInsets.only(top: 20, left: 10, right: 10),
+              padding: EdgeInsets.only(top: 20, left: 10, right: 10),
               child: Column(
                 children: <Widget> [
                   Text('Logging out'),

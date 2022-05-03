@@ -228,7 +228,7 @@ class _ImageSaveState extends State<ImageSaveComponent> {
   Widget _buildImageSelect(ImageClass image, var context) {
     Color color = Colors.transparent;
     if (_selectedImageUrls.contains(image.url)) {
-      color = Colors.grey[300];
+      color = Colors.grey.shade300;
     }
     return InkWell(
       onTap: () {
@@ -473,7 +473,7 @@ class _ImageSaveState extends State<ImageSaveComponent> {
 
   @override
   Widget build(BuildContext context) {
-    var currentUserState = context.watch<CurrentUserState>();
+    var currentUserState = context.watch<CurrentUserState?>();
 
     _fromTypes = widget.fromTypesString.split(",");
     if (!formValsImageSave.containsKey('from_type')) {

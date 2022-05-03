@@ -6,21 +6,22 @@ import 'package:file_picker/file_picker.dart';
 
 class InputFile extends StatefulWidget {
   bool multiple;
-  List<String> extensions;
+  List<String>? extensions;
   var formVals;
-  String formValsKey;
+  String? formValsKey;
   String label;
   String hint;
   var fieldKey;
-  Function(String) onChanged;
+  Function(String)? onChanged;
   bool showChips;
   bool withData;
   String fileType;
+  String routeKey;
 
-  InputFile({Key key, @required this.multiple, this.formVals,
-    this.formValsKey, this.extensions = null, this.label = 'File', this.hint = 'Choose File', this.fieldKey = null,
+  InputFile({Key? key, @required this.multiple = false, this.formVals = null,
+    this.formValsKey = null, this.extensions = null, this.label = 'File', this.hint = 'Choose File', this.fieldKey = null,
     this.onChanged = null, this.showChips = true, this.withData = true,
-    this.fileType = 'custom' }) : super(key: key);
+    this.fileType = 'custom', this.routeKey = '' }) : super(key: key);
   //InputFile(this.multiple, this. extensions, this.formVals, this.formValsKey, { Key key,
   //  this.label, this.hint, this.fieldKey }) : super(key: key);
   //InputFile(this.multiple, this.extensions, this.formVals, this.formValsKey, this.label, this.hint, this.fieldKey);
@@ -38,7 +39,7 @@ class _InputFileState extends State<InputFile> {
       _loading = true;
     });
 
-    List<String> extensions = widget.extensions;
+    List<String>? extensions = widget.extensions;
     FileType fileType = FileType.custom;
 
     if (widget.fileType == 'image') {
@@ -58,14 +59,16 @@ class _InputFileState extends State<InputFile> {
       extensions = null;
     }
 
+    List<PlatformFile>? filesTemp = [];
     try {
       //_directoryPath = null;
-      _files = (await FilePicker.platform.pickFiles(
+      filesTemp = (await FilePicker.platform.pickFiles(
         type: fileType,
         allowMultiple: widget.multiple,
         allowedExtensions: extensions,
         withData: widget.withData,
       ))?.files;
+      _files = filesTemp!;
     } on PlatformException catch (e) {
       print("Unsupported operation" + e.toString());
     } catch (ex) {
@@ -79,8 +82,8 @@ class _InputFileState extends State<InputFile> {
     var futures = <Future>[];
     List<PlatformFile> filesCopy = [];
     for (var file in _files) {
-      if (file.bytes == null) {
-        futures.add(new File(file.path).readAsBytes().then((var bytes) {
+      if (file.bytes == null && file.path != null) {
+        futures.add(new File(file.path!).readAsBytes().then((var bytes) {
           //file.bytes = bytes;
           filesCopy.add(PlatformFile.fromMap({
             'path': file.path,
@@ -111,7 +114,7 @@ class _InputFileState extends State<InputFile> {
     });
     widget.formVals[widget.formValsKey] = _files;
     if(widget.onChanged != null) {
-      widget.onChanged('');
+      widget.onChanged!('');
     }
   }
 
@@ -163,10 +166,15 @@ class _InputFileState extends State<InputFile> {
     //}
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
+      //mainAxisAlignment: MainAxisAlignment.start,
+      children: [
         ElevatedButton(
           onPressed: () { _pickFile(); },
           child: Text(widget.hint),
+          style: ElevatedButton.styleFrom(
+            primary: Colors.white,
+            onPrimary: Colors.grey.shade800,
+          ),
         ),
         _buildFileChips(),
       ]

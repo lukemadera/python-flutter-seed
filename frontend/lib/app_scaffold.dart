@@ -16,7 +16,7 @@ _launchURL(url) async {
 }
 
 class AppScaffoldComponent extends StatefulWidget {
-  Widget body;
+  Widget? body;
 
   AppScaffoldComponent({this.body});
 
@@ -203,7 +203,7 @@ class _AppScaffoldState extends State<AppScaffoldComponent> {
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: Colors.grey[300],
+              color: Colors.grey.shade300,
               spreadRadius: 2,
               blurRadius: 4,
               offset: Offset(0, 0),
@@ -224,7 +224,6 @@ class _AppScaffoldState extends State<AppScaffoldComponent> {
           SizedBox(height: 5),
           Expanded(
             child: Container(
-              //color: Colors.grey[850],
               color: Colors.white,
               child: Align(
                 alignment: Alignment.center,
@@ -240,7 +239,6 @@ class _AppScaffoldState extends State<AppScaffoldComponent> {
       );
     }
     return Container(
-      //color: Colors.grey[850],
       color: Colors.white,
       child: Align(
         alignment: Alignment.center,
@@ -279,7 +277,7 @@ class _AppScaffoldState extends State<AppScaffoldComponent> {
 
   @override
   Widget build(BuildContext context) {
-    var currentUserState = context.watch<CurrentUserState>();
+    var currentUserState = context.watch<CurrentUserState?>();
     return LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth > 600) {

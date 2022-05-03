@@ -3,6 +3,7 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 
 import './modules/home.dart';
+import './modules/user_auth/auth.dart';
 import './modules/user_auth/user_email_verify.dart';
 import './modules/user_auth/user_login.dart';
 import './modules/user_auth/user_logout.dart';
@@ -12,18 +13,18 @@ import './modules/user_auth/user_signup.dart';
 class AppRouter {
   static FluroRouter router = FluroRouter.appRouter;
 
-  final List<AppRoute> _routes;
-  final Handler _notFoundHandler;
+  final List<AppRoute>? _routes;
+  final Handler? _notFoundHandler;
 
-  List<AppRoute> get routes => _routes;
+  List<AppRoute>? get routes => _routes;
 
-  const AppRouter({ @required List<AppRoute> routes, @required Handler notFoundHandler, }) :
+  const AppRouter({ @required List<AppRoute>? routes, @required Handler? notFoundHandler, }) :
     _routes = routes,
     _notFoundHandler = notFoundHandler;
 
   void setupRoutes() {
     router.notFoundHandler = _notFoundHandler;
-    routes.forEach(
+    routes?.forEach(
       (AppRoute route) => router.define(route.route, handler: route.handler, transitionType: TransitionType.fadeIn),
     );
   }
@@ -31,31 +32,30 @@ class AppRouter {
 
 class AppRoutes {
   static final routeNotFoundHandler = Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    handlerFunc: (context, params) {
       return RouteNotFoundPage();
     }
   );
 
-  static final rootRoute = AppRoute('/', Handler(
-    handlerFunc: (context, parameters) => HomeComponent(),
-  ));
   static final homeRoute = AppRoute('/home', Handler(
-    handlerFunc: (context, parameters) => HomeComponent(),
+    handlerFunc: (context, params) {
+      return HomeComponent();
+    }
   ));
   static final loginRoute = AppRoute('/login', Handler(
-    handlerFunc: (context, parameters) => UserLoginComponent(),
+    handlerFunc: (context, params) => UserLoginComponent(),
   ));
   static final logoutRoute = AppRoute('/logout', Handler(
-    handlerFunc: (context, parameters) => UserLogoutComponent(),
+    handlerFunc: (context, params) => UserLogoutComponent(),
   ));
   static final signupRoute = AppRoute('/signup', Handler(
-    handlerFunc: (context, parameters) => UserSignupComponent(),
+    handlerFunc: (context, params) => UserSignupComponent(),
   ));
   static final emailVerifyRoute = AppRoute('/email-verify', Handler(
-    handlerFunc: (context, parameters) => UserEmailVerifyComponent(),
+    handlerFunc: (context, params) => UserEmailVerifyComponent(),
   ));
   static final passwordResetRoute = AppRoute('/password-reset', Handler(
-    handlerFunc: (context, parameters) => UserPasswordResetComponent(),
+    handlerFunc: (context, params) => UserPasswordResetComponent(),
   ));
 
   // Primitive function to get one param detail route (i.e. id).
@@ -64,7 +64,7 @@ class AppRoutes {
   //}
 
   static final List<AppRoute> routes = [
-    rootRoute,
+    //rootRoute,
     homeRoute,
     loginRoute,
     logoutRoute,
@@ -82,16 +82,17 @@ class RouteNotFoundPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text("Route not found"),
+            Text("Route not found"),
             TextButton(
-              onPressed: () => AppRouter.router.navigateTo(
-                context,
-                AppRoutes.rootRoute.route,
-                replace: true,
-                clearStack: true,
-                transition: TransitionType.none,
-              ),
-              child: const Text("Go Home"),
+              //onPressed: () => AppRouter.router.navigateTo(
+              //  context,
+              //  AppRoutes.rootRoute.route,
+              //  replace: true,
+              //  clearStack: true,
+              //  transition: TransitionType.none,
+              //),
+              onPressed: () => Navigator.pushNamed(context, '/home'),
+              child: Text("Go Home"),
             )
           ],
         ),

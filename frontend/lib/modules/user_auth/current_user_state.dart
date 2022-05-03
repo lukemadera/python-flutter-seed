@@ -12,12 +12,15 @@ class CurrentUserState extends ChangeNotifier {
 
   var _currentUser = null;
   bool _isLoggedIn = false;
-  LocalStorage _localstorage = null;
+  LocalStorage? _localstorage = null;
   List<String> _routeIds = [];
+  String _status = "done";
 
   get isLoggedIn => _isLoggedIn;
 
   get currentUser => _currentUser;
+
+  get status => _status;
 
   void init() {
     if (_routeIds.length == 0) {
@@ -30,6 +33,11 @@ class CurrentUserState extends ChangeNotifier {
             setCurrentUser(user);
           }
         }
+        _status = "done";
+      }));
+
+      _routeIds.add(_socketService.onRoute('logout', callback: (String resString) {
+        _status = "done";
       }));
     }
   }
@@ -47,7 +55,7 @@ class CurrentUserState extends ChangeNotifier {
     _socketService.setAuth(user.id, user.session_id);
 
     getLocalstorage();
-    _localstorage.setItem('currentUser', _currentUser.toJson());
+    _localstorage?.setItem('currentUser', _currentUser.toJson());
 
     notifyListeners();
   }
@@ -58,21 +66,23 @@ class CurrentUserState extends ChangeNotifier {
     _socketService.setAuth('', '');
 
     getLocalstorage();
-    _localstorage.deleteItem('currentUser');
+    _localstorage?.deleteItem('currentUser');
 
     notifyListeners();
   }
 
   void checkAndLogin() {
     getLocalstorage();
-    var user = _localstorage.getItem('currentUser');
+    var user = _localstorage?.getItem('currentUser');
     if (user != null) {
+      _status = "loading";
       _socketService.emit('getUserSession', { 'user_id': user['id'], 'session_id': user['session_id'] });
     }
   }
 
   void logout() {
     if (_currentUser != null) {
+      _status = "loading";
       _socketService.emit('logout', { 'user_id': _currentUser.id, 'session_id': _currentUser.session_id });
     }
   }

@@ -20,7 +20,6 @@ class _UserLoginState extends State<UserLoginComponent> {
 
   final _formKey = GlobalKey<FormState>();
   final _formFieldKeyEmail = GlobalKey<FormFieldState>();
-  bool _autoValidate = false;
   var formVals = {};
   bool _loading = false;
   String _message = '';
@@ -73,13 +72,12 @@ class _UserLoginState extends State<UserLoginComponent> {
           ElevatedButton(
             onPressed: () {
               setState(() { _message = ''; });
-              if (_formKey.currentState.validate()) {
+              if (_formKey.currentState?.validate() == true) {
                 setState(() { _loading = true; });
-                _formKey.currentState.save();
+                _formKey.currentState?.save();
                 _socketService.emit('login', formVals);
               } else {
                 setState(() { _loading = false; });
-                setState(() { _autoValidate = true; });
               }
             },
             child: Text('Log In'),
@@ -88,13 +86,12 @@ class _UserLoginState extends State<UserLoginComponent> {
           ElevatedButton(
             onPressed: () {
               setState(() { _message = ''; });
-              if (_formFieldKeyEmail.currentState.validate()) {
+              if (_formFieldKeyEmail.currentState?.validate() == true) {
                 setState(() { _loading = true; });
-                _formKey.currentState.save();
+                _formKey.currentState?.save();
                 _socketService.emit('forgotPassword', { 'email': formVals['email'] });
               } else {
                 setState(() { _loading = false; });
-                setState(() { _autoValidate = true; });
               }
             },
             child: Text('Forgot Password'),
@@ -123,7 +120,7 @@ class _UserLoginState extends State<UserLoginComponent> {
               padding: const EdgeInsets.only(top: 20, left: 10, right: 10),
               child: Form(
                 key: _formKey,
-                autovalidate: _autoValidate,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[

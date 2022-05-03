@@ -24,6 +24,13 @@ For (Ubuntu) script, see `server-setup.sh`
   - etc (see individual dependencies for installation notes)
 
 
+### SSL (HTTPS) with letsencrypt
+
+- Run on server without SSL (set config.yml and frontend/.env to http only)
+- `certbot certonly --webroot` (just use /var/www/seed-app for the webroot, though not sure if this matters?)
+- Update config.yml and frontend.env to use https (and add the path to the generated SSL files)
+
+
 ### Setup third party tools
 
 Create accounts and add api keys in configs for each:

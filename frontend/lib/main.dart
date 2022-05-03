@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:url_strategy/url_strategy.dart';
 
 import './common/socket_service.dart';
 import './common/localstorage_service.dart';
@@ -18,7 +19,7 @@ import './routes.dart';
 import './modules/user_auth/current_user_state.dart';
 
 main() async {
-  await DotEnv().load('.env');
+  await dotenv.load(fileName: '.env');
 
   if (kIsWeb) {
     // Check for redirect.
@@ -26,7 +27,7 @@ main() async {
     String url = Uri.base.toString();
     // dot env is not loading properly if on www? So just assume if null to redirect.
     // Check www first so can also redirect http to https after if necessary.
-    if ((DotEnv().env['REDIRECT_WWW'] == '1' || DotEnv().env['REDIRECT_WWW'] == null) && url.contains('www.')) {
+    if ((dotenv.env['REDIRECT_WWW'] == '1' || dotenv.env['REDIRECT_WWW'] == null) && url.contains('www.')) {
       if (url.contains('https://') || url.contains('http://')) {
         url = url.replaceAll('www.', '');
       } else {
@@ -34,7 +35,7 @@ main() async {
       }
       redirectIt = true;
     }
-    if (DotEnv().env['REDIRECT_HTTP'] == '1' && url.contains('http://')) {
+    if (dotenv.env['REDIRECT_HTTP'] == '1' && url.contains('http://')) {
       url = url.replaceAll('http://', 'https://');
       redirectIt = true;
     }
@@ -44,11 +45,12 @@ main() async {
   }
 
   LocalstorageService _localstorageService = LocalstorageService();
-  _localstorageService.init(DotEnv().env['APP_NAME']);
+  _localstorageService.init(dotenv.env['APP_NAME']);
 
   SocketService _socketService = SocketService();
-  _socketService.connect(DotEnv().env['SOCKET_URL_PUBLIC']);
+  _socketService.connect(dotenv.env['SOCKET_URL_PUBLIC']);
 
+  setPathUrlStrategy();
   runApp(
     MultiProvider(
       providers: [

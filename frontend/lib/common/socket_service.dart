@@ -52,7 +52,7 @@ class SocketService {
     _channel.sink.add(utf8.encode(message));
   }
 
-  String onRoute(String route, {Function(String) callback}) {
+  String onRoute(String route, {Function(String)? callback}) {
     if (!_callbacksByRoute.containsKey(route)) {
       _callbacksByRoute[route] = {};
     }

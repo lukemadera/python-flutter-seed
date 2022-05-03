@@ -19,7 +19,6 @@ class _UserPasswordResetState extends State<UserPasswordResetComponent> {
   InputFields _inputFields = InputFields();
 
   final _formKey = GlobalKey<FormState>();
-  bool _autoValidate = false;
   var formVals = {};
   bool _loading = false;
   String _message = '';
@@ -63,13 +62,12 @@ class _UserPasswordResetState extends State<UserPasswordResetComponent> {
       child: ElevatedButton(
         onPressed: () {
           setState(() { _message = ''; });
-          if (_formKey.currentState.validate()) {
+          if (_formKey.currentState?.validate() == true) {
             setState(() { _loading = true; });
-            _formKey.currentState.save();
+            _formKey.currentState?.save();
             _socketService.emit('passwordReset', formVals);
           } else {
             setState(() { _loading = false; });
-            setState(() { _autoValidate = true; });
           }
         },
         child: Text('Reset Password'),
@@ -96,7 +94,7 @@ class _UserPasswordResetState extends State<UserPasswordResetComponent> {
               padding: const EdgeInsets.only(top: 20, left: 10, right: 10),
               child: Form(
                 key: _formKey,
-                autovalidate: _autoValidate,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[

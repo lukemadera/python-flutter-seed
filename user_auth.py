@@ -1,4 +1,4 @@
-from passlib.context import CryptContext
+import hashlib
 import re
 import urllib
 
@@ -9,16 +9,14 @@ import notifications
 
 _config = ml_config.get_config()
 
-pwd_context = CryptContext(
-    schemes=["bcrypt"],
-    default="bcrypt"
-)
-
-def encrypt_password(password):
-    return pwd_context.encrypt(password)
+def encrypt_password(password, salt = 'K4L1Y08Rmx39SIvO'):
+    salt = bytes(salt, 'utf-8')
+    return hashlib.scrypt(bytes(password, 'utf-8'), salt = salt, n = 2, r = 8, p = 1)
 
 def check_encrypted_password(password, hashed):
-    return pwd_context.verify(password, hashed)
+    if encrypt_password(password) == hashed:
+        return True
+    return False
 
 def getUserFields():
     return {
@@ -278,6 +276,9 @@ def passwordReset(email, passwordResetKey, newPassword):
                 user['session_id'] = retSess['sessionId']
                 ret['user'] = user
                 ret['valid'] = 1
+    else:
+        ret['msg'] = 'Email or password reset key not found.'
+
     return ret
 
 def emailVerify(email, verifyKey):

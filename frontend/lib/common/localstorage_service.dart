@@ -7,7 +7,7 @@ class LocalstorageService {
     return _instance;
   }
 
-  LocalStorage _localstorage;
+  LocalStorage? _localstorage;
 
   void init(storageName) {
     _localstorage = new LocalStorage('${storageName}.json');

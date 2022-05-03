@@ -9,6 +9,8 @@ web_server:
     files: frontend/build/web
   static_folders:
     - uploads
+    - static-files
+    - .well-known
   ssl:
     enabled: 0
     key_path: /ssl/KEY.key
