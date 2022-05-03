@@ -36,7 +36,7 @@ class _AuthState extends State<Auth> {
     if (status != _status) {
       _status = status;
       if (status == 'done' && !Provider.of<CurrentUserState>(context, listen: false).isLoggedIn) {
-        WidgetsBinding.instance?.addPostFrameCallback((_) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
           Navigator.pushNamed(context, '/login');
         });
       }

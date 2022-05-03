@@ -35,19 +35,19 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.4
 
-  file_picker: 4.3.0
+  file_picker: 4.5.1
   fluro: 2.0.3
   flutter_dotenv: 5.0.2
-  google_fonts: 2.1.1
+  google_fonts: 2.3.2
   intl: 0.17.0
   # http: 0.12.2
   localstorage: 4.0.0+1
-  multi_select_flutter: 4.0.0
-  provider: 6.0.1
+  multi_select_flutter: 4.1.2
+  provider: 6.0.2
   universal_html: 2.0.8
-  url_launcher: 6.0.17
+  url_launcher: 6.1.0
   url_strategy: 0.2.0
-  web_socket_channel: 2.1.0
+  web_socket_channel: 2.2.0
 
 dev_dependencies:
   flutter_test:
