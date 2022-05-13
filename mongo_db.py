@@ -31,7 +31,11 @@ def sort_to_list(sort_obj):
     return sort
 
 def get_client(db_url):
-    return pymongo.MongoClient(db_url, ssl=True, ssl_cert_reqs=ssl.CERT_NONE)
+    return pymongo.MongoClient(db_url, ssl=True, tlsAllowInvalidCertificates=True)
+
+def SetDB(db):
+    global _db
+    _db = db
 
 def get_db(db_name, mdb_client):
     global _db

@@ -48,6 +48,10 @@ Create accounts and add api keys in configs for each:
   - `cd frontend && flutter run -d chrome --web-port=PORT`
   - OR for non chrome (will have to manually open browser, type in URL & reload page for updates), `flutter run -d web-server --web-port=PORT`
 
+## Tests
+
+- `python -m pytest`
+
 
 ## Rebuilding Mobile
 
