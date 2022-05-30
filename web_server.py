@@ -191,6 +191,9 @@ async def start_async_app():
                 # print ('static files list', paths_index['route'] + file, static_files)
                 app.router.add_get(paths_index['route'] + file, static_files)
                 app.add_routes([web.static(paths_static['route'] + '/' + file, paths_static['files'] + '/' + file)])
+            else:
+                # print ('static FILE', paths_index['route'] + file, static_files)
+                app.router.add_get(paths_index['route'] + file, static_files)
 
         app.add_routes([web.static('/assets', paths_static['files'] + '/assets')])
         # app.add_routes([web.static('/static/css', paths_static['files'] + '/css')])
