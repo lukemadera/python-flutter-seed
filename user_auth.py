@@ -25,7 +25,9 @@ def getUserFields():
         'last_name': True,
         'status': True,
         'roles': True,
-        'username': True
+        'username': True,
+        'created_at': True,
+        'updated_at': True,
     }
 
 def checkEmail(email, fields=None):
@@ -348,4 +350,27 @@ def createUsername(firstName, lastName, maxNameChars=6):
                 usernameCheck = username + str(countSuffix)
 
     ret['username'] = usernameFinal
+    return ret
+
+def updateFirstLastName(user, firstName, lastName):
+    ret = { 'valid': 0, 'msg': '' } 
+    query = {
+            '_id': mongo_db.to_object_id(user['_id'])
+        }
+
+    mutation = {
+            '$set': {
+                'first_name': firstName,
+                'last_name': lastName,
+            }
+        }
+    result = mongo_db.update_one('user', query, mutation)
+    if result:
+        retSess = updateSession(user['_id'])
+        if 'sessionId' in retSess:
+            user['session_id'] = retSess['sessionId']
+            ret['user'] = mongo_db.find_one('user', query, fields = getUserFields())['item']
+            ret['valid'] = 1
+    else:
+        ret['msg'] = 'updateFirstLastName error'
     return ret
