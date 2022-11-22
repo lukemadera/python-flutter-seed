@@ -45,6 +45,3 @@ log_level: 20
 log_tracker:
   min_per_hour: 1
   max_per_hour: 150
-server_simearth:
-  url: http://localhost:8083
-  url_websocket: ws://localhost:8083
