@@ -1,29 +1,36 @@
 import 'dart:convert';
 import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import './image_class.dart';
-import '../socket_service.dart';
-import '../file_upload_service.dart';
 import './input_fields.dart';
 import './input_file.dart';
 import '../../modules/user_auth/current_user_state.dart';
+import '../file_upload_service.dart';
+import '../socket_service.dart';
 
 class ImageSaveComponent extends StatefulWidget {
-  var formVals;
-  String formValsKey;
-  String label;
-  String fromTypesString;
-  bool multiple;
-  bool imageUploadSimple;
-  int maxImageSize;
+  final formVals;
+  final String formValsKey;
+  final String label;
+  final String fromTypesString;
+  final bool multiple;
+  final bool imageUploadSimple;
+  final int maxImageSize;
 
   //ImageSaveComponent({Key key, @required this.multiple, @required this.extensions, this.formVals,
   //  this.formValsKey, this.label = 'File', this.hint = 'Choose File', this.fieldKey = null }) : super(key: key);
-  ImageSaveComponent({ @required this.formVals, @required this.formValsKey, this.label = 'Image',
-    this.fromTypesString = 'upload,myImages,allImages', this.multiple = false,
-    this.imageUploadSimple = false, this.maxImageSize = 600, });
+  ImageSaveComponent({
+    required this.formVals,
+    required this.formValsKey,
+    this.label = 'Image',
+    this.fromTypesString = 'upload,myImages,allImages',
+    this.multiple = false,
+    this.imageUploadSimple = false,
+    this.maxImageSize = 600,
+  });
 
   @override
   _ImageSaveState createState() => _ImageSaveState();
@@ -35,10 +42,10 @@ class _ImageSaveState extends State<ImageSaveComponent> {
   SocketService _socketService = SocketService();
   InputFields _inputFields = InputFields();
 
-  List<String> _fromTypes;
+  late List<String> _fromTypes = widget.fromTypesString.split(',');
 
   final _formKey = GlobalKey<FormState>();
-  bool _autoValidate = false;
+  AutovalidateMode _autoValidate = AutovalidateMode.disabled;
   var formValsImageSave = {};
   bool _loadingUpload = false;
   String _message = '';
@@ -55,8 +62,9 @@ class _ImageSaveState extends State<ImageSaveComponent> {
   @override
   void initState() {
     super.initState();
-    
-    _routeIds.add(_socketService.onRoute('getImages', callback: (String resString) {
+
+    _routeIds
+        .add(_socketService.onRoute('getImages', callback: (String resString) {
       _messageImages = '';
       var res = json.decode(resString);
       var data = res['data'];
@@ -66,7 +74,8 @@ class _ImageSaveState extends State<ImageSaveComponent> {
           _images.add(ImageClass.fromJson(image));
         }
       } else {
-         _messageImages = data['msg'].length > 0 ? data['msg'] : 'No images found';
+        _messageImages =
+            data['msg'].length > 0 ? data['msg'] : 'No images found';
       }
       setState(() {
         _loadingImages = false;
@@ -88,8 +97,7 @@ class _ImageSaveState extends State<ImageSaveComponent> {
     if (_loadingUpload) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 16.0),
-        child: LinearProgressIndicator(
-        ),
+        child: LinearProgressIndicator(),
       );
     }
     return SizedBox.shrink();
@@ -104,123 +112,124 @@ class _ImageSaveState extends State<ImageSaveComponent> {
 
   Widget _buildChangeButtons(var context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 10),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          //ElevatedButton(
-          //  onPressed: () {
-          //    setState(() { _editing = !_editing; });
-          //  },
-          //  child: Text('Change'),
-          //),
-          //SizedBox(width: 10),
-          ElevatedButton(
-            onPressed: () {
-              widget.formVals[widget.formValsKey] = widget.multiple ? [] : '';
-              formValsImageSave['image_urls'] = [];
-              formValsImageSave['image_files'] = [];
-              setState(() {
-                formValsImageSave = formValsImageSave;
-                _editing = true;
-                formValsUploadFiles = {};
-              });
-            },
-            //child: Text('Remove'),
-            child: Text('Change'),
-          ),
-        ]
-      )
-    );
+        padding: EdgeInsets.only(bottom: 10),
+        child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              //ElevatedButton(
+              //  onPressed: () {
+              //    setState(() { _editing = !_editing; });
+              //  },
+              //  child: Text('Change'),
+              //),
+              //SizedBox(width: 10),
+              ElevatedButton(
+                onPressed: () {
+                  widget.formVals[widget.formValsKey] =
+                      widget.multiple ? [] : '';
+                  formValsImageSave['image_urls'] = [];
+                  formValsImageSave['image_files'] = [];
+                  setState(() {
+                    formValsImageSave = formValsImageSave;
+                    _editing = true;
+                    formValsUploadFiles = {};
+                  });
+                },
+                //child: Text('Remove'),
+                child: Text('Change'),
+              ),
+            ]));
   }
 
   Widget _buildFileSave(String formValsUploadFilesKey, var context) {
     return Container(
-      width: 125,
-      padding: EdgeInsets.only(right: 10),
-      child: Form(
-        key: formValsUploadFiles[formValsUploadFilesKey]['formKey'],
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Image.memory(formValsUploadFiles[formValsUploadFilesKey]['file'].bytes),
-            SizedBox(height: 5),
-            _inputFields.inputText(context, formValsUploadFiles[formValsUploadFilesKey], 'title', label: 'Title', hint: 'Image Title'),
-          ]
-        )
-      )
-    );
+        width: 125,
+        padding: EdgeInsets.only(right: 10),
+        child: Form(
+            key: formValsUploadFiles[formValsUploadFilesKey]['formKey'],
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Image.memory(formValsUploadFiles[formValsUploadFilesKey]
+                          ['file']
+                      .bytes),
+                  SizedBox(height: 5),
+                  _inputFields.inputText(context,
+                      formValsUploadFiles[formValsUploadFilesKey], 'title',
+                      label: 'Title', hint: 'Image Title'),
+                ])));
   }
 
   Widget _buildUploadForms(var context) {
-    if (formValsImageSave['image_files'] != null && formValsImageSave['image_files'].length > 0) {
+    if (formValsImageSave['image_files'] != null &&
+        formValsImageSave['image_files'].length > 0) {
       Widget saveButton = SizedBox.shrink();
       if (!_loadingUpload) {
         saveButton = Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                _messageUploadFiles = '';
-                _loadingUpload = false;
-                var filesInfo = [];
-                bool valid = true;
-                for (String key in formValsUploadFiles.keys) {
-                  formValsUploadFiles[key]['formKey'].currentState.save();
-                  if (formValsUploadFiles[key]['title'].length < 1) {
-                    valid = false;
-                    break;
-                  }
-                  filesInfo.add(formValsUploadFiles[key]);
-                }
-                if (valid) {
-                  _loadingUpload = true;
-                  _fileUploadService.uploadFiles(filesInfo, (List<String> fileUrls) {
-                    if (widget.multiple) {
-                      widget.formVals[widget.formValsKey] = fileUrls;
-                    } else {
-                      widget.formVals[widget.formValsKey] = fileUrls[0];
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () {
+                  _messageUploadFiles = '';
+                  _loadingUpload = false;
+                  var filesInfo = [];
+                  bool valid = true;
+                  for (String key in formValsUploadFiles.keys) {
+                    formValsUploadFiles[key]['formKey'].currentState.save();
+                    if (formValsUploadFiles[key]['title'].length < 1) {
+                      valid = false;
+                      break;
                     }
-                    // Copy to local state to display images.
-                    formValsImageSave['image_urls'] = fileUrls;
-                    setState(() {
-                      formValsImageSave = formValsImageSave;
-                      _editing = false;
-                      _loadingUpload = false;
-                    });
-                  }, fileType: 'image', maxImageSize: widget.maxImageSize);
-                } else {
-                  _messageUploadFiles = 'Enter a title for all images';
-                }
-                //setState(() { _editing = !_editing; });
-                setState(() {
-                  _messageUploadFiles = _messageUploadFiles;
-                  _loadingUpload = _loadingUpload;
-                });
-              },
-              child: Text('Save Image Files'),
-            ),
-            SizedBox(height: 5),
-          ]
-        );
+                    filesInfo.add(formValsUploadFiles[key]);
+                  }
+                  if (valid) {
+                    _loadingUpload = true;
+                    _fileUploadService.uploadFiles(filesInfo,
+                        (List<String> fileUrls) {
+                      if (widget.multiple) {
+                        widget.formVals[widget.formValsKey] = fileUrls;
+                      } else {
+                        widget.formVals[widget.formValsKey] = fileUrls[0];
+                      }
+                      // Copy to local state to display images.
+                      formValsImageSave['image_urls'] = fileUrls;
+                      setState(() {
+                        formValsImageSave = formValsImageSave;
+                        _editing = false;
+                        _loadingUpload = false;
+                      });
+                    }, fileType: 'image', maxImageSize: widget.maxImageSize);
+                  } else {
+                    _messageUploadFiles = 'Enter a title for all images';
+                  }
+                  //setState(() { _editing = !_editing; });
+                  setState(() {
+                    _messageUploadFiles = _messageUploadFiles;
+                    _loadingUpload = _loadingUpload;
+                  });
+                },
+                child: Text('Save Image Files'),
+              ),
+              SizedBox(height: 5),
+            ]);
       }
 
       return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          SizedBox(height: 10),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              ...formValsUploadFiles.keys.map((keyTemp) => _buildFileSave(keyTemp, context) ).toList(),
-            ]
-          ),
-          saveButton,
-          _buildLoadingUpload(context),
-          _buildMessageUploadFiles(context),
-        ]
-      );
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(height: 10),
+            Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  ...formValsUploadFiles.keys
+                      .map((keyTemp) => _buildFileSave(keyTemp, context))
+                      .toList(),
+                ]),
+            saveButton,
+            _buildLoadingUpload(context),
+            _buildMessageUploadFiles(context),
+          ]);
     }
     return SizedBox.shrink();
   }
@@ -231,39 +240,36 @@ class _ImageSaveState extends State<ImageSaveComponent> {
       color = Colors.grey.shade300;
     }
     return InkWell(
-      onTap: () {
-        if (widget.multiple) {
-          if (!_selectedImageUrls.contains(image.url)) {
-            _selectedImageUrls.add(image.url);
+        onTap: () {
+          if (widget.multiple) {
+            if (!_selectedImageUrls.contains(image.url)) {
+              _selectedImageUrls.add(image.url);
+            } else {
+              _selectedImageUrls.remove(image.url);
+            }
+            setState(() {
+              _selectedImageUrls = _selectedImageUrls;
+            });
           } else {
-            _selectedImageUrls.remove(image.url);
+            _selectImageUrls([image.url]);
           }
-          setState(() {
-            _selectedImageUrls = _selectedImageUrls;
-          });
-        } else {
-          _selectImageUrls([image.url]);
-        }
-      },
-      child: Container(
-        //height: 105,
-        //width: 105,
-        padding: EdgeInsets.all(5),
-        color: color,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              height: 100,
-              width: 100,
-              child: Image.network(image.url),
-            ),
-            SizedBox(height: 5),
-            Text(image.title),
-          ]
-        )
-      )
-    );
+        },
+        child: Container(
+            //height: 105,
+            //width: 105,
+            padding: EdgeInsets.all(5),
+            color: color,
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    height: 100,
+                    width: 100,
+                    child: Image.network(image.url),
+                  ),
+                  SizedBox(height: 5),
+                  Text(image.title),
+                ])));
   }
 
   Widget _buildImagesSelect(var context) {
@@ -271,33 +277,29 @@ class _ImageSaveState extends State<ImageSaveComponent> {
       Widget widgetButton = SizedBox.shrink();
       if (widget.multiple) {
         widgetButton = Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                _selectImageUrls(_selectedImageUrls);
-              },
-              child: Text('Select Images'),
-            )
-          ]
-        );
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () {
+                  _selectImageUrls(_selectedImageUrls);
+                },
+                child: Text('Select Images'),
+              )
+            ]);
       }
 
       return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Wrap(
-            spacing: 5,
-            runSpacing: 5,
-            children: <Widget> [
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Wrap(spacing: 5, runSpacing: 5, children: <Widget>[
               SizedBox(height: 10),
-              ..._images.map((image) => _buildImageSelect(image, context) ).toList(),
-            ]
-          ),
-          widgetButton,
-        ]
-      );
+              ..._images
+                  .map((image) => _buildImageSelect(image, context))
+                  .toList(),
+            ]),
+            widgetButton,
+          ]);
     }
     return _buildMessageImages(context);
   }
@@ -309,71 +311,86 @@ class _ImageSaveState extends State<ImageSaveComponent> {
       if (_fromTypes.length > 1) {
         List<Map<String, String>> selectOpts = [];
         if (_fromTypes.contains('upload')) {
-          selectOpts.add({ 'value': 'upload', 'label': 'Upload' });
+          selectOpts.add({'value': 'upload', 'label': 'Upload'});
         }
         if (_fromTypes.contains('myImages')) {
-          selectOpts.add({ 'value': 'myImages', 'label': 'My Images' });
+          selectOpts.add({'value': 'myImages', 'label': 'My Images'});
         }
         if (_fromTypes.contains('allImages')) {
-          selectOpts.add({ 'value': 'allImages', 'label': 'All Images' });
+          selectOpts.add({'value': 'allImages', 'label': 'All Images'});
         }
         widgetSelect = Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            _inputFields.inputSelect(selectOpts, context, formValsImageSave, 'from_type', onChanged: (String newVal) {
-              _getImages('', currentUserState);
-              setState(() {
-                formValsImageSave = formValsImageSave;
-              });
-            }),
-            SizedBox(height: 10),
-          ]
-        );
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              _inputFields.inputSelect(
+                  selectOpts, context, formValsImageSave, 'from_type',
+                  onChanged: (String newVal) {
+                _getImages('', currentUserState);
+                setState(() {
+                  formValsImageSave = formValsImageSave;
+                });
+              }),
+              SizedBox(height: 10),
+            ]);
       } else {
         formValsImageSave['from_type'] = _fromTypes[0];
       }
 
       if (formValsImageSave['from_type'] == 'upload') {
         widgetByType = Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            InputFile(multiple: widget.multiple, fileType: 'image', extensions: ['jpg', 'jpeg', 'png'], formVals: formValsImageSave,
-              formValsKey: 'image_files', label: 'Image', showChips: false, onChanged: (String v) {
-              if (formValsImageSave['image_files'] != null && formValsImageSave['image_files'].length > 0) {
-                formValsUploadFiles = {};
-                for (var file in formValsImageSave['image_files']) {
-                  String randId = new Random().nextInt(1000000).toString();
-                  formValsUploadFiles[randId] = { 'file': file, 'title': '', 'formKey': GlobalKey<FormState>(), };
-                }
-                setState(() {
-                  formValsUploadFiles = formValsUploadFiles;
-                });
-              }
-            }),
-            _buildUploadForms(context),
-          ]
-        );
-      } else if (formValsImageSave['from_type'] == 'myImages' || formValsImageSave['from_type'] == 'allImages') {
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              InputFile(
+                  multiple: widget.multiple,
+                  fileType: 'image',
+                  extensions: ['jpg', 'jpeg', 'png'],
+                  formVals: formValsImageSave,
+                  formValsKey: 'image_files',
+                  label: 'Image',
+                  showChips: false,
+                  onChanged: (String v) {
+                    if (formValsImageSave['image_files'] != null &&
+                        formValsImageSave['image_files'].length > 0) {
+                      formValsUploadFiles = {};
+                      for (var file in formValsImageSave['image_files']) {
+                        String randId =
+                            new Random().nextInt(1000000).toString();
+                        formValsUploadFiles[randId] = {
+                          'file': file,
+                          'title': '',
+                          'formKey': GlobalKey<FormState>(),
+                        };
+                      }
+                      setState(() {
+                        formValsUploadFiles = formValsUploadFiles;
+                      });
+                    }
+                  }),
+              _buildUploadForms(context),
+            ]);
+      } else if (formValsImageSave['from_type'] == 'myImages' ||
+          formValsImageSave['from_type'] == 'allImages') {
         widgetByType = Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            _inputFields.inputText(context, formValsImageSave, 'search_images', hint: 'Search for images', debounceChange: 1000, onChange: (String val) {
-              _getImages(val, currentUserState);
-            }),
-            SizedBox(height: 10),
-            _buildImagesSelect(context),
-          ]
-        );
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              _inputFields.inputText(
+                  context, formValsImageSave, 'search_images',
+                  hint: 'Search for images',
+                  debounceChange: 1000, onChange: (String val) {
+                _getImages(val, currentUserState);
+              }),
+              SizedBox(height: 10),
+              _buildImagesSelect(context),
+            ]);
       }
     }
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        widgetSelect,
-        widgetByType,
-      ]
-    );
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          widgetSelect,
+          widgetByType,
+        ]);
   }
 
   Widget _buildImageDisplay(String imageUrl) {
@@ -386,22 +403,21 @@ class _ImageSaveState extends State<ImageSaveComponent> {
   }
 
   Widget _buildImagesDisplay(var context) {
-    if (formValsImageSave.containsKey('image_urls') && formValsImageSave['image_urls'] != null &&
-      formValsImageSave['image_urls'].length > 0 && !_editing) {
+    if (formValsImageSave.containsKey('image_urls') &&
+        formValsImageSave['image_urls'] != null &&
+        formValsImageSave['image_urls'].length > 0 &&
+        !_editing) {
       return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            children: <Widget>[
-              ...formValsImageSave['image_urls'].map((imageUrl) => _buildImageDisplay(imageUrl) ).toList(),
-            ]
-          ),
-          SizedBox(height: 10),
-          _buildChangeButtons(context),
-        ]
-      );
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Wrap(spacing: 10, runSpacing: 10, children: <Widget>[
+              ...formValsImageSave['image_urls']
+                  .map((imageUrl) => _buildImageDisplay(imageUrl))
+                  .toList(),
+            ]),
+            SizedBox(height: 10),
+            _buildChangeButtons(context),
+          ]);
     } else {
       return SizedBox.shrink();
     }
@@ -416,59 +432,64 @@ class _ImageSaveState extends State<ImageSaveComponent> {
     }
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        _buildSelect(context, currentUserState),
-        //_buildImageSimple(context),
-        //_buildSubmit(context),
-        //_buildMessage(context),
-      ]
-    );
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          _buildSelect(context, currentUserState),
+          //_buildImageSimple(context),
+          //_buildSubmit(context),
+          //_buildMessage(context),
+        ]);
   }
 
   Widget _buildImageSimple(var context) {
     Widget input = SizedBox.shrink();
     if (!_loadingUpload) {
-      input = InputFile(multiple: false, fileType: 'image', extensions: ['jpg', 'jpeg', 'png'], formVals: formValsImageSave,
-        formValsKey: 'image_simple', showChips: false, onChanged: (String v) {
-        setState(() {
-          _loadingUpload = true;
-        });
-        var filesInfo = [];
-        for (var file in formValsImageSave["image_simple"]) {
-          filesInfo.add({ 'file': file, 'title': '' });
-        }
-        _fileUploadService.uploadFiles(filesInfo, (List<String> fileUrls) {
-          if (widget.multiple) {
-              widget.formVals[widget.formValsKey] = fileUrls;
-            } else {
-              widget.formVals[widget.formValsKey] = fileUrls[0];
-            }
-            // Copy to local state to display images.
-            formValsImageSave['image_urls'] = fileUrls;
+      input = InputFile(
+          multiple: false,
+          fileType: 'image',
+          extensions: ['jpg', 'jpeg', 'png'],
+          formVals: formValsImageSave,
+          formValsKey: 'image_simple',
+          showChips: false,
+          onChanged: (String v) {
             setState(() {
-              formValsImageSave = formValsImageSave;
-              _editing = false;
-              _loadingUpload = false;
+              _loadingUpload = true;
             });
-        }, fileType: 'image', maxImageSize: widget.maxImageSize);
-      });
+            var filesInfo = [];
+            for (var file in formValsImageSave["image_simple"]) {
+              filesInfo.add({'file': file, 'title': ''});
+            }
+            _fileUploadService.uploadFiles(filesInfo, (List<String> fileUrls) {
+              if (widget.multiple) {
+                widget.formVals[widget.formValsKey] = fileUrls;
+              } else {
+                widget.formVals[widget.formValsKey] = fileUrls[0];
+              }
+              // Copy to local state to display images.
+              formValsImageSave['image_urls'] = fileUrls;
+              setState(() {
+                formValsImageSave = formValsImageSave;
+                _editing = false;
+                _loadingUpload = false;
+              });
+            }, fileType: 'image', maxImageSize: widget.maxImageSize);
+          });
     }
 
     Widget image = SizedBox.shrink();
-    if (formValsImageSave.containsKey('image_two_url') && formValsImageSave['image_two_url'] != null &&
-      formValsImageSave['image_two_url'].length > 0) {
+    if (formValsImageSave.containsKey('image_two_url') &&
+        formValsImageSave['image_two_url'] != null &&
+        formValsImageSave['image_two_url'].length > 0) {
       image = Image.network(formValsImageSave['image_two_url']);
     }
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        input,
-        SizedBox(height: 5),
-        _buildLoadingUpload(context),
-        image,
-      ]
-    );
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          input,
+          SizedBox(height: 5),
+          _buildLoadingUpload(context),
+          image,
+        ]);
   }
 
   @override
@@ -479,9 +500,10 @@ class _ImageSaveState extends State<ImageSaveComponent> {
     if (!formValsImageSave.containsKey('from_type')) {
       formValsImageSave['from_type'] = _fromTypes[0];
     }
-    if (widget.formVals.containsKey(widget.formValsKey) && widget.formVals[widget.formValsKey] != null) {
+    if (widget.formVals.containsKey(widget.formValsKey) &&
+        widget.formVals[widget.formValsKey] != null) {
       if (widget.formVals[widget.formValsKey] is String) {
-        formValsImageSave['image_urls'] = [ widget.formVals[widget.formValsKey] ];
+        formValsImageSave['image_urls'] = [widget.formVals[widget.formValsKey]];
       } else {
         formValsImageSave['image_urls'] = widget.formVals[widget.formValsKey];
       }
@@ -499,15 +521,14 @@ class _ImageSaveState extends State<ImageSaveComponent> {
         padding: const EdgeInsets.only(top: 20),
         child: Form(
           key: _formKey,
-          autovalidate: _autoValidate,
+          autovalidateMode: _autoValidate,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(widget.label),
-              _buildImagesDisplay(context),
-              _buildImagePicker(context, currentUserState),
-            ]
-          ),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(widget.label),
+                _buildImagesDisplay(context),
+                _buildImagePicker(context, currentUserState),
+              ]),
         ),
       ),
     );
@@ -528,9 +549,11 @@ class _ImageSaveState extends State<ImageSaveComponent> {
     });
   }
 
-  void _getImages(String search, var currentUserState, { int lastPageNumber = 0 }) {
+  void _getImages(String search, var currentUserState,
+      {int lastPageNumber = 0}) {
     String user_id_creator = '';
-    if (formValsImageSave['from_type'] == 'myImages' && currentUserState.isLoggedIn) {
+    if (formValsImageSave['from_type'] == 'myImages' &&
+        currentUserState.isLoggedIn) {
       user_id_creator = currentUserState.currentUser.id;
     }
     int limit = 20;
@@ -545,7 +568,7 @@ class _ImageSaveState extends State<ImageSaveComponent> {
 
     setState(() {
       _images = [];
-      _lastPageNumberImages =_lastPageNumberImages;
+      _lastPageNumberImages = _lastPageNumberImages;
       _loadingImages = true;
       _messageImages = '';
     });
