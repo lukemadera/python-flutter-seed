@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:seed_app/routes.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import './third-party/custom_icon_icons.dart';
@@ -25,7 +27,7 @@ class AppScaffoldComponent extends StatefulWidget {
 }
 
 class _AppScaffoldState extends State<AppScaffoldComponent> {
-  Widget _buildLinkButton(var context, String routePath, String label) {
+  Widget _buildLinkButton(BuildContext context, String routePath, String label) {
     return Container(
       decoration: BoxDecoration(
         border: Border(bottom: BorderSide(width: 1, color: Theme.of(context).primaryColor)),
@@ -36,7 +38,7 @@ class _AppScaffoldState extends State<AppScaffoldComponent> {
           //if (Scaffold.of(context).isEndDrawerOpen) {
           Navigator.of(context).pop();
           //}
-          Navigator.pushNamed(context, routePath);
+          context.go(routePath);
         },
         //child: Text(label),
         title: Text(label, style: TextStyle( color: Theme.of(context).primaryColor )),
@@ -44,13 +46,13 @@ class _AppScaffoldState extends State<AppScaffoldComponent> {
     );
   }
 
-  Widget _buildUserButton(context, currentUserState, { double width = 100, double fontSize = 13 }) {
+  Widget _buildUserButton(BuildContext context, currentUserState, { double width = 100, double fontSize = 13 }) {
     if (currentUserState.isLoggedIn) {
       return SizedBox.shrink();
     }
     return ElevatedButton(
       onPressed: () {
-        Navigator.pushNamed(context, '/login');
+        context.go(Routes.login);
       },
       style: ElevatedButton.styleFrom(
         primary: Colors.white,
@@ -82,10 +84,10 @@ class _AppScaffoldState extends State<AppScaffoldComponent> {
     return SizedBox.shrink();
   }
 
-  Widget _buildNavButton(String route, String text, IconData icon, var context, { double width = 100, double fontSize = 13 }) {
+  Widget _buildNavButton(String route, String text, IconData icon, BuildContext context, { double width = 100, double fontSize = 13 }) {
     return ElevatedButton(
       onPressed: () {
-        Navigator.pushNamed(context, route);
+        context.go(route);
       },
       style: ElevatedButton.styleFrom(
         primary: Colors.white,

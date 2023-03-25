@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:seed_app/routes.dart';
 import './current_user_state.dart';
 import '../../app_scaffold.dart';
 
@@ -37,7 +39,7 @@ class _AuthState extends State<Auth> {
       _status = status;
       if (status == 'done' && !Provider.of<CurrentUserState>(context, listen: false).isLoggedIn) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          Navigator.pushNamed(context, '/login');
+          context.go(Routes.login);
         });
       }
     }

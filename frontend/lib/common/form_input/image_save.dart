@@ -21,7 +21,7 @@ class ImageSaveComponent extends StatefulWidget {
 
   //ImageSaveComponent({Key key, @required this.multiple, @required this.extensions, this.formVals,
   //  this.formValsKey, this.label = 'File', this.hint = 'Choose File', this.fieldKey = null }) : super(key: key);
-  ImageSaveComponent({ @required this.formVals, @required this.formValsKey, this.label = 'Image',
+  ImageSaveComponent({ required this.formVals, required this.formValsKey, this.label = 'Image',
     this.fromTypesString = 'upload,myImages,allImages', this.multiple = false,
     this.imageUploadSimple = false, this.maxImageSize = 600, });
 
@@ -35,10 +35,10 @@ class _ImageSaveState extends State<ImageSaveComponent> {
   SocketService _socketService = SocketService();
   InputFields _inputFields = InputFields();
 
-  List<String> _fromTypes;
+  late List<String> _fromTypes;
 
   final _formKey = GlobalKey<FormState>();
-  bool _autoValidate = false;
+  AutovalidateMode _autoValidate = AutovalidateMode.disabled;
   var formValsImageSave = {};
   bool _loadingUpload = false;
   String _message = '';
@@ -55,7 +55,7 @@ class _ImageSaveState extends State<ImageSaveComponent> {
   @override
   void initState() {
     super.initState();
-    
+
     _routeIds.add(_socketService.onRoute('getImages', callback: (String resString) {
       _messageImages = '';
       var res = json.decode(resString);
@@ -499,7 +499,7 @@ class _ImageSaveState extends State<ImageSaveComponent> {
         padding: const EdgeInsets.only(top: 20),
         child: Form(
           key: _formKey,
-          autovalidate: _autoValidate,
+          autovalidateMode: _autoValidate,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
