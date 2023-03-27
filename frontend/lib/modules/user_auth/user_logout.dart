@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:seed_app/routes.dart';
 
 import '../../app_scaffold.dart';
-import '../../common/route_service.dart';
 import '../../common/socket_service.dart';
-import './user_class.dart';
 import './current_user_state.dart';
 
 class UserLogoutComponent extends StatefulWidget {
@@ -16,7 +16,6 @@ class UserLogoutComponent extends StatefulWidget {
 
 class _UserLogoutState extends State<UserLogoutComponent> {
   List<String> _routeIds = [];
-  RouteService _routeService = RouteService();
   SocketService _socketService = SocketService();
 
   bool _loading = false;
@@ -31,7 +30,7 @@ class _UserLogoutState extends State<UserLogoutComponent> {
       var data = res['data'];
       if (data['valid'] == 1) {
         Provider.of<CurrentUserState>(context, listen: false).clearUser();
-        _routeService.goHome(context);
+        context.go(Routes.home);
       } else {
         setState(() { _message = data['msg'].length > 0 ? data['msg'] : 'Logout error'; });
       }
@@ -42,7 +41,7 @@ class _UserLogoutState extends State<UserLogoutComponent> {
       Provider.of<CurrentUserState>(context, listen: false).logout();
     } else {
       Timer(Duration(milliseconds: 500), () {
-        _routeService.goHome(context);
+        context.go(Routes.home);
       });
     }
   }

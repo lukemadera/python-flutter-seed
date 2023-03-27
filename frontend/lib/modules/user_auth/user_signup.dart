@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:seed_app/routes.dart';
 
 import '../../app_scaffold.dart';
-import '../../common/route_service.dart';
 import '../../common/socket_service.dart';
 import './user_class.dart';
 import '../../common/form_input/input_fields.dart';
@@ -16,7 +17,6 @@ class UserSignupComponent extends StatefulWidget {
 
 class _UserSignupState extends State<UserSignupComponent> {
   List<String> _routeIds = [];
-  RouteService _routeService = RouteService();
   SocketService _socketService = SocketService();
   InputFields _inputFields = InputFields();
 
@@ -38,7 +38,7 @@ class _UserSignupState extends State<UserSignupComponent> {
           var user = UserClass.fromJson(data['user']);
           if (user.id.length > 0) {
             Provider.of<CurrentUserState>(context, listen: false).setCurrentUser(user);
-            _routeService.goHome(context);
+            context.go(Routes.home);
           } else {
             setState(() { _message = 'Error, please try again.'; });
           }
@@ -112,7 +112,7 @@ class _UserSignupState extends State<UserSignupComponent> {
                     _buildMessage(context),
                     TextButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/login');
+                        context.go(Routes.login);
                       },
                       child: Text('Already have an account? Log in.'),
                     ),
