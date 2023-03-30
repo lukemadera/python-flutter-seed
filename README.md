@@ -9,10 +9,7 @@ Python (with sockets) + MongoDB + Flutter
 
 For (Ubuntu) script, see `server-setup.sh`
 
-- install imagemagick - http://docs.wand-py.org/en/0.5.9/
-    - Mac: `brew install imagemagick`
-    - Ubuntu: `apt-get install libmagickwand-dev`
-- `pip3 install -r ./requirements.txt`
+- `pip install -r ./requirements.txt`
 - set up configs (these vary per environment and contains access keys so are NOT checked into version control)
   - `cp config.sample.yml config.yml` then edit `config.yml` as necessary.
   - `cp configloggly.sample.conf config-loggly.conf` and edit `config-loggly.conf` as needed.
@@ -37,6 +34,8 @@ For (Ubuntu) script, see `server-setup.sh`
 
 Create accounts and add api keys in configs for each:
 - database: mongodb - free tier on AtlasDB
+- CircleCI
+  - (Create and) add SSH key to circleci.com project settings (and ensure added to server)
 - email: free tier on mailchimp or sendgrid
 - logging: free tier on loggly
 
@@ -69,7 +68,7 @@ Create accounts and add api keys in configs for each:
 `git pull origin master`
 `pip3 install -r ./requirements.txt` (only necessary if updated requirements.txt)
 `cd frontend && flutter build web && cd ../`
-`systemctl restart systemd_web_server.service`
+`systemctl restart systemd_web_server_seed_app.service`
 
 
 ### Versions

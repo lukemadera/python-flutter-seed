@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:seed_app/styles/custom_theme.dart';
 //if (kIsWeb) {
 //import 'dart:html' if (dart.library.html);
 //}
@@ -14,6 +13,7 @@ import './common/localstorage_service.dart';
 import './common/socket_service.dart';
 import './modules/user_auth/current_user_state.dart';
 import './routes.dart';
+import './styles/custom_theme.dart';
 
 main() async {
   await dotenv.load(fileName: '.env');

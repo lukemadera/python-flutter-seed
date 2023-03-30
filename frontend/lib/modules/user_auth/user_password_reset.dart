@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:seed_app/routes.dart';
 
 import '../../app_scaffold.dart';
 import '../../common/socket_service.dart';
 import './user_class.dart';
 import '../../common/form_input/input_fields.dart';
 import './current_user_state.dart';
+import '../../routes.dart';
 
 class UserPasswordResetComponent extends StatefulWidget {
   @override

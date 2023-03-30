@@ -2,7 +2,7 @@ import base64
 # import requests
 import math
 import os
-from wand.image import Image
+from PIL import Image
 
 import mongo_db
 
@@ -28,14 +28,17 @@ def GetResizeDimensions(img, maxSize = 900):
 def HandleImage(filePath, baseUrl, filename = '', maxSize = 900, removeOriginalFile = 0):
     ret = { 'valid': 0, 'msg': '', 'url': '' }
 
-    with Image(filename=filePath) as img:
+    with Image.open(filePath) as img:
         if img.width > maxSize or img.height > maxSize:
             newDimensions = GetResizeDimensions(img, maxSize)
-            img.resize(newDimensions['width'], newDimensions['height'])
+            # Preserve format: https://stackoverflow.com/questions/29374072/why-does-resizing-image-in-pillow-python-remove-image-format
+            imgFormat = img.format
+            img = img.resize((newDimensions['width'], newDimensions['height']))
+            img.format = imgFormat
             # img.quality(80)
         if len(filename) < 1:
             filename = mongo_db.newObjectIdString()
-            if img.format == 'png':
+            if img.format.lower() == 'png':
                 filename += '.png'
             else:
                 img.format = 'jpeg'

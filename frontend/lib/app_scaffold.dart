@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:seed_app/routes.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import './third-party/custom_icon_icons.dart';
-
 import './modules/user_auth/current_user_state.dart';
+import './routes.dart';
+import './third-party/custom_icon_icons.dart';
 
 _launchURL(url) async {
   //const url = 'https://flutter.dev';

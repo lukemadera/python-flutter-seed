@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:seed_app/routes.dart';
+
 import './current_user_state.dart';
 import '../../app_scaffold.dart';
+import '../../routes.dart';
 
 class Auth extends StatefulWidget {
   Widget child = SizedBox.shrink();

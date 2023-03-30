@@ -16,6 +16,6 @@ def RestartIt():
         pip3 install -r ./requirements.txt && \
         flutter upgrade && \
         cd frontend && flutter build web && cd ../ && \
-        systemctl restart systemd_web_server.service")
+        systemctl restart systemd_web_server_seed_app.service")
     os.system("echo ci_webhook.Restart done")
     log.log('warn', 'ci_webhook.RestartIt done')
