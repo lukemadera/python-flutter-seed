@@ -44,7 +44,7 @@ def HandleImage(filePath, baseUrl, filename = '', maxSize = 900, removeOriginalF
                 img.format = 'jpeg'
                 filename += '.jpg'
         newFilePath = 'uploads/images/' + filename
-        img.save(filename=newFilePath)
+        img.save(newFilePath)
         ret['url'] = baseUrl + '/' + newFilePath
         ret['valid'] = 1
 

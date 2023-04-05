@@ -77,14 +77,14 @@ class _ImageSaveState extends State<ImageSaveComponent> {
     }));
   }
 
-  Widget _buildMessageUploadFiles(var context) {
+  Widget _buildMessageUploadFiles(BuildContext context) {
     if (_messageUploadFiles.length > 0) {
       return Text(_messageUploadFiles);
     }
     return SizedBox.shrink();
   }
 
-  Widget _buildLoadingUpload(var context) {
+  Widget _buildLoadingUpload(BuildContext context) {
     if (_loadingUpload) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -95,14 +95,14 @@ class _ImageSaveState extends State<ImageSaveComponent> {
     return SizedBox.shrink();
   }
 
-  Widget _buildMessageImages(var context) {
+  Widget _buildMessageImages(BuildContext context) {
     if (_messageImages.length > 0) {
       return Text(_messageImages);
     }
     return SizedBox.shrink();
   }
 
-  Widget _buildChangeButtons(var context) {
+  Widget _buildChangeButtons(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(bottom: 10),
       child: Row(
@@ -134,7 +134,7 @@ class _ImageSaveState extends State<ImageSaveComponent> {
     );
   }
 
-  Widget _buildFileSave(String formValsUploadFilesKey, var context) {
+  Widget _buildFileSave(String formValsUploadFilesKey, BuildContext context) {
     return Container(
       width: 125,
       padding: EdgeInsets.only(right: 10),
@@ -152,7 +152,7 @@ class _ImageSaveState extends State<ImageSaveComponent> {
     );
   }
 
-  Widget _buildUploadForms(var context) {
+  Widget _buildUploadForms(BuildContext context) {
     if (formValsImageSave['image_files'] != null && formValsImageSave['image_files'].length > 0) {
       Widget saveButton = SizedBox.shrink();
       if (!_loadingUpload) {
@@ -225,7 +225,7 @@ class _ImageSaveState extends State<ImageSaveComponent> {
     return SizedBox.shrink();
   }
 
-  Widget _buildImageSelect(ImageClass image, var context) {
+  Widget _buildImageSelect(ImageClass image, BuildContext context) {
     Color color = Colors.transparent;
     if (_selectedImageUrls.contains(image.url)) {
       color = Colors.grey.shade300;
@@ -266,7 +266,7 @@ class _ImageSaveState extends State<ImageSaveComponent> {
     );
   }
 
-  Widget _buildImagesSelect(var context) {
+  Widget _buildImagesSelect(BuildContext context) {
     if (_images.length > 0) {
       Widget widgetButton = SizedBox.shrink();
       if (widget.multiple) {
@@ -302,7 +302,7 @@ class _ImageSaveState extends State<ImageSaveComponent> {
     return _buildMessageImages(context);
   }
 
-  Widget _buildSelect(var context, var currentUserState) {
+  Widget _buildSelect(BuildContext context, var currentUserState) {
     Widget widgetSelect = SizedBox.shrink();
     Widget widgetByType = SizedBox.shrink();
     if (_editing) {
@@ -385,7 +385,7 @@ class _ImageSaveState extends State<ImageSaveComponent> {
     );
   }
 
-  Widget _buildImagesDisplay(var context) {
+  Widget _buildImagesDisplay(BuildContext context) {
     if (formValsImageSave.containsKey('image_urls') && formValsImageSave['image_urls'] != null &&
       formValsImageSave['image_urls'].length > 0 && !_editing) {
       return Column(
@@ -407,7 +407,7 @@ class _ImageSaveState extends State<ImageSaveComponent> {
     }
   }
 
-  Widget _buildImagePicker(var context, var currentUserState) {
+  Widget _buildImagePicker(BuildContext context, var currentUserState) {
     if (widget.imageUploadSimple) {
       if (_editing) {
         return _buildImageSimple(context);
@@ -426,7 +426,7 @@ class _ImageSaveState extends State<ImageSaveComponent> {
     );
   }
 
-  Widget _buildImageSimple(var context) {
+  Widget _buildImageSimple(BuildContext context) {
     Widget input = SizedBox.shrink();
     if (!_loadingUpload) {
       input = InputFile(multiple: false, fileType: 'image', extensions: ['jpg', 'jpeg', 'png'], formVals: formValsImageSave,
@@ -456,9 +456,9 @@ class _ImageSaveState extends State<ImageSaveComponent> {
     }
 
     Widget image = SizedBox.shrink();
-    if (formValsImageSave.containsKey('image_two_url') && formValsImageSave['image_two_url'] != null &&
-      formValsImageSave['image_two_url'].length > 0) {
-      image = Image.network(formValsImageSave['image_two_url']);
+    if (formValsImageSave.containsKey('image_urls') && formValsImageSave['image_urls'] != null &&
+      formValsImageSave['image_urls'].length > 0) {
+      image = Image.network(formValsImageSave['image_urls'][0]);
     }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

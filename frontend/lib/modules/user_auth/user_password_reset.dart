@@ -51,7 +51,7 @@ class _UserPasswordResetState extends State<UserPasswordResetComponent> {
     }));
   }
 
-  Widget _buildSubmit(var context) {
+  Widget _buildSubmit(BuildContext context) {
     if (_loading) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -77,7 +77,7 @@ class _UserPasswordResetState extends State<UserPasswordResetComponent> {
     );
   }
 
-  Widget _buildMessage(var context) {
+  Widget _buildMessage(BuildContext context) {
     if (_message.length > 0) {
       return Text(_message);
     }

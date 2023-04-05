@@ -32,7 +32,7 @@ def routeIt(route, data, auth):
 
     admin = [
     ]
-    if route in perms or route in userIdRequired:
+    if route in perms or route in userIdRequired or route in admin:
         if len(auth['user_id']) == 0:
             ret['msg'] = "Empty user id."
             return ret

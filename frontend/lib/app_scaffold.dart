@@ -111,7 +111,7 @@ class _AppScaffoldState extends State<AppScaffoldComponent> {
     );
   }
 
-  Widget _buildDrawerButton(var context, { double width = 100, double fontSize = 13 }) {
+  Widget _buildDrawerButton(BuildContext context, { double width = 100, double fontSize = 13 }) {
     return Builder(
       builder: (BuildContext context) {
         return ElevatedButton(
@@ -143,7 +143,7 @@ class _AppScaffoldState extends State<AppScaffoldComponent> {
     );
   }
 
-  Widget _buildDrawer(var context, var currentUserState) {
+  Widget _buildDrawer(BuildContext context, var currentUserState) {
     List<Widget> columns = [];
     if (currentUserState.hasRole('admin')) {
     }
@@ -173,7 +173,7 @@ class _AppScaffoldState extends State<AppScaffoldComponent> {
     );
   }
 
-  Widget _buildHeader(var context, var currentUserState) {
+  Widget _buildHeader(BuildContext context, var currentUserState) {
     List<Widget> rows = [
       Expanded(
         flex: 1,
@@ -215,7 +215,7 @@ class _AppScaffoldState extends State<AppScaffoldComponent> {
     );
   }
 
-  Widget _buildBody(var context, var currentUserState, { bool header = false }) {
+  Widget _buildBody(BuildContext context, var currentUserState, { bool header = false }) {
     if (header) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -252,14 +252,14 @@ class _AppScaffoldState extends State<AppScaffoldComponent> {
     );
   }
 
-  Widget _buildSmall(var context, var currentUserState) {
+  Widget _buildSmall(BuildContext context, var currentUserState) {
     return Scaffold(
       endDrawer: _buildDrawer(context, currentUserState),
       body: _buildBody(context, currentUserState, header: true),
     );
   }
 
-  Widget _buildMedium(var context, var currentUserState) {
+  Widget _buildMedium(BuildContext context, var currentUserState) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
