@@ -21,6 +21,18 @@ def from_object_id(id):
 def to_object_id(id):
     return ObjectId(id)
 
+def ToObjectIds(ids):
+    objectIds = []
+    for id1 in ids:
+        objectIds.append(to_object_id(id1))
+    return objectIds
+
+def FromObjectIds(objectIds):
+    ids = []
+    for objectId in objectIds:
+        ids.append(from_object_id(objectId))
+    return ids
+
 def sort_to_list(sort_obj):
     if sort_obj is None:
         return None
@@ -72,7 +84,7 @@ def insert_one(collection_name, obj1, db1 = None):
     #     'created_at': date_time.now_string()
     # }, obj1);
 
-    inserted_id = collection.insert_one(obj1).inserted_id
+    inserted_id = from_object_id(collection.insert_one(obj1).inserted_id)
     return {
         'item': lodash.extend_object(obj1, {
             '_id': inserted_id
@@ -89,7 +101,7 @@ def insert_many(collection_name, objects, db1 = None):
 
     inserted_ids = collection.insert_many(objects).inserted_ids
     for index, obj1 in enumerate(objects):
-        objects[index]['_id'] = inserted_ids[index]
+        objects[index]['_id'] = from_object_id(inserted_ids[index])
     return {
         'items': objects
     }
@@ -114,7 +126,7 @@ def update_one(collection_name, query, mutation, upsert = False, db1 = None):
         'acknowledged': result.acknowledged,
         'matched_count': result.matched_count,
         'modified_count': result.modified_count,
-        'upserted_id': result.upserted_id
+        'upserted_id': from_object_id(result.upserted_id)
     }
     # TODO - find and return full updated object?
 

@@ -35,8 +35,8 @@ notifications.set_config(config_notifications)
 
 _migrations.RunAll()
 
-paths_index = config['web_server']['index']
-paths_static = config['web_server']['static']
+paths_index = config['web_server']['index'] if 'index' in config['web_server'] else None
+paths_static = config['web_server']['static'] if 'static' in config['web_server'] else None
 
 log.log('warn', 'web_server starting')
 
@@ -178,35 +178,37 @@ async def start_async_app():
         # CORS options.
         routes_http.Routes(app, cors)
 
-        # app.router.add_static(paths_static['route'], paths_static['files'])
+        if paths_index is not None and paths_static is not None:
+            # app.router.add_static(paths_static['route'], paths_static['files'])
 
-        # Not able to match whole folder?
-        static_files_list = ['flutter_service_worker.js', 'favicon.ico']
-        files = os.listdir(paths_static['files'])
-        for file in files:
-            if file != 'index.html':
-                static_files_list.append(file)
-        for file in static_files_list:
-            if os.path.isdir(paths_static['files'] + '/' + file):
-                # print ('static files list', paths_index['route'] + file, static_files)
-                app.router.add_get(paths_index['route'] + file, static_files)
-                app.add_routes([web.static(paths_static['route'] + '/' + file, paths_static['files'] + '/' + file)])
-            else:
-                # print ('static FILE', paths_index['route'] + file, static_files)
-                app.router.add_get(paths_index['route'] + file, static_files)
+            # Not able to match whole folder?
+            static_files_list = ['flutter_service_worker.js', 'favicon.ico']
+            files = os.listdir(paths_static['files'])
+            for file in files:
+                if file != 'index.html':
+                    static_files_list.append(file)
+            for file in static_files_list:
+                if os.path.isdir(paths_static['files'] + '/' + file):
+                    # print ('static files list', paths_index['route'] + file, static_files)
+                    app.router.add_get(paths_index['route'] + file, static_files)
+                    app.add_routes([web.static(paths_static['route'] + '/' + file, paths_static['files'] + '/' + file)])
+                else:
+                    # print ('static FILE', paths_index['route'] + file, static_files)
+                    app.router.add_get(paths_index['route'] + file, static_files)
 
-        app.add_routes([web.static('/assets', paths_static['files'] + '/assets')])
-        # app.add_routes([web.static('/static/css', paths_static['files'] + '/css')])
+            app.add_routes([web.static('/assets', paths_static['files'] + '/assets')])
+            # app.add_routes([web.static('/static/css', paths_static['files'] + '/css')])
 
         # Need to create uploads folder here so it exists.
         _file_upload.CreateUploadsDirs()
-        for path1 in config['web_server']['static_folders']:
-            if not os.path.isdir(path1):
-                os.mkdir(path1)
-            defaults[url] = aiohttp_cors.ResourceOptions()
-            app.add_routes([web.static('/' + path1 + '/', path1)])
-            app.add_routes([web.static('/' + path1, path1)])
-            # app.router.add_static('/' + path1 + '/', path1)
+        if 'static_folders' in config['web_server']:
+            for path1 in config['web_server']['static_folders']:
+                if not os.path.isdir(path1):
+                    os.mkdir(path1)
+                defaults[url] = aiohttp_cors.ResourceOptions()
+                app.add_routes([web.static('/' + path1 + '/', path1)])
+                app.add_routes([web.static('/' + path1, path1)])
+                # app.router.add_static('/' + path1 + '/', path1)
 
         # https://stackoverflow.com/questions/34565705/asyncio-and-aiohttp-route-all-urls-paths-to-handler
         app.router.add_get('/{tail:.*}', index)

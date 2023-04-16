@@ -1,5 +1,6 @@
 import copy
 import random
+import re
 
 def findIndex(array1, key, value):
     return find_index(array1, key, value)
@@ -42,11 +43,12 @@ def sort2D(array1, key, order = 'ascending'):
     reverse = True if order == 'descending' else False
     return sorted(array1, key=getValue, reverse=reverse)
 
-def omit(object1, keys = []):
+def omit(object1, keys = [], skipNull = 1):
     new_object = {}
     for key in object1:
         if key not in keys:
-            new_object[key] = object1[key]
+            if not skipNull or (str(object1[key]) != 'null' and object1[key] != None):
+                new_object[key] = object1[key]
     return new_object
 
 def pick(object1, keys = []):
@@ -99,3 +101,32 @@ def removeArrayIndices(array, indices):
         if index in indices:
             del array1[index]
     return array1
+
+def CreateUName(title, maxChars = 6, minChars = 5):
+    # Remove all non letters, go to lowercase, then cut at max length to make a username.
+    uName = title.lower()
+    regex = re.compile('[^a-zA-Z]')
+    uName = regex.sub('', uName)
+    if len(uName) > maxChars:
+        uName = uName[slice(0, maxChars)]
+    if len(uName) < minChars:
+        uName += random_string(minChars - len(uName), 'readable')
+    return uName
+
+def FormUNameSuffix(uNameCheck, existingUNames, maxLoops = 10):
+    uNameFinal = None
+    loopCount = 0
+    while uNameFinal is None:
+        suffix = random_string(10, 'readable')
+        indexSuffix = 0
+        while uNameFinal is None and indexSuffix < len(suffix):
+            if uNameCheck not in existingUNames:
+                uNameFinal = uNameCheck
+            else:
+                uNameCheck += suffix[indexSuffix]
+                indexSuffix += 1
+        loopCount += 1
+        if loopCount > maxLoops:
+            print ('lodash.FormUNameSuffix maxLoops, stopping')
+            break
+    return uNameFinal
