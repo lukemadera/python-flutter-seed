@@ -47,7 +47,7 @@ main() async {
   _localstorageService.init(dotenv.env['APP_NAME']);
 
   SocketService _socketService = SocketService();
-  _socketService.connect(dotenv.env['SOCKET_URL_PUBLIC']);
+  _socketService.connect({ 'default': dotenv.env['SOCKET_URL_PUBLIC'] });
 
   setPathUrlStrategy();
   runApp(MultiProvider(

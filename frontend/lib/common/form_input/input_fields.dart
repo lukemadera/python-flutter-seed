@@ -316,43 +316,162 @@ class InputFields {
     } else {
       value = (formVals.containsKey(formValsKey)) ? formVals[formValsKey] : null;
     }
-    return DropdownButtonFormField(
-      key: fieldKey,
-      value: value,
-      onSaved: (value) {
-        if (formValsKey == null) {
-          formVals = value;
-        } else {
-          formVals[formValsKey] = value;
-        }
-      },
-      //hint: Text(hint),
-      decoration: InputDecoration(
-        labelText: label,
-        hintText: hint,
-      ),
-      validator: (String? value) {
-        if (required && value?.isEmpty == true) {
-          return 'Please select one';
-        }
-        return null;
-      },
-      onChanged: (newVal) {
-        if (formValsKey == null) {
-          formVals = newVal;
-        } else {
-          formVals[formValsKey] = newVal;
-        }
-        if (onChanged != null) {
-          onChanged(newVal);
-        }
-      },
-      items: options.map<DropdownMenuItem<String>>((opt) {
-        return DropdownMenuItem<String>(
-          value: opt['value'],
-          child: Text(opt['label']),
-        );
-      }).toList(),
+    return Container(
+      child: DropdownButtonFormField(
+        isExpanded: true,
+        key: fieldKey,
+        value: value,
+        onSaved: (value) {
+          if (formValsKey == null) {
+            formVals = value;
+          } else {
+            formVals[formValsKey] = value;
+          }
+        },
+        //hint: Text(hint),
+        decoration: InputDecoration(
+          labelText: label,
+          hintText: hint,
+        ),
+        validator: (String? value) {
+          if (required && value?.isEmpty == true) {
+            return 'Please select one';
+          }
+          return null;
+        },
+        onChanged: (newVal) {
+          if (formValsKey == null) {
+            formVals = newVal;
+          } else {
+            formVals[formValsKey] = newVal;
+          }
+          if (onChanged != null) {
+            onChanged(newVal);
+          }
+        },
+        items: options.map<DropdownMenuItem<String>>((opt) {
+          return DropdownMenuItem<String>(
+            value: opt['value'],
+            child: Text(opt['label']),
+          );
+        }).toList(),
+      )
+    );
+  }
+
+  Widget inputSelectSearch(var options, var context, var formVals, String? formValsKey, { String label = '',
+    String hint = '', var fieldKey = null, bool required = false, onChanged = null, onKeyUp = null,
+    int debounceChange = 1000 }) {
+    Timer? debounce = null;
+    String initialVal = '';
+    if (formValsKey == null) {
+      initialVal = formVals;
+    } else {
+      initialVal = (formVals.containsKey(formValsKey)) ? formVals[formValsKey] : '';
+    }
+    TextEditingController controller = new TextEditingController(text: initialVal);
+    //String? value = null;
+    //if (formValsKey == null) {
+    //  value = formVals;
+    //} else {
+    //  value = (formVals.containsKey(formValsKey)) ? formVals[formValsKey] : null;
+    //}
+    List<PopupMenuEntry<dynamic>> items = [];
+    for (int ii = 0; ii < options.length; ii++) {
+      items.add(PopupMenuItem( value: options[ii]['value'], child: Text(options[ii]['label']) ) );
+    }
+    return Row(
+      children: [
+        //DropdownButtonFormField(
+        //  key: fieldKey,
+        //  value: value,
+        //  onSaved: (value) {
+        //    if (formValsKey == null) {
+        //      formVals = value;
+        //    } else {
+        //      formVals[formValsKey] = value;
+        //    }
+        //  },
+        //  //hint: Text(hint),
+        //  decoration: InputDecoration(
+        //    labelText: label,
+        //    hintText: hint,
+        //  ),
+        //  validator: (String? value) {
+        //    if (required && value?.isEmpty == true) {
+        //      return 'Please select one';
+        //    }
+        //    return null;
+        //  },
+        //  onChanged: (newVal) {
+        //    if (formValsKey == null) {
+        //      formVals = newVal;
+        //    } else {
+        //      formVals[formValsKey] = newVal;
+        //    }
+        //    if (onChanged != null) {
+        //      onChanged(newVal);
+        //    }
+        //  },
+        //  items: options.map<DropdownMenuItem<String>>((opt) {
+        //    return DropdownMenuItem<String>(
+        //      value: opt['value'],
+        //      child: Text(opt['label']),
+        //    );
+        //  }).toList(),
+        //),
+        Expanded(
+          flex: 1,
+          //padding: EdgeInsets.only(right: 45),
+          child: TextFormField(
+            controller: controller,
+            decoration: InputDecoration(
+              //labelText: label,
+              hintText: hint,
+            ),
+            onChanged: (value) {
+              if (onKeyUp != null) {
+                if (debounceChange > 0) {
+                  if (debounce?.isActive ?? false) debounce?.cancel();
+                  debounce = Timer(Duration(milliseconds: debounceChange), () {
+                    if (formValsKey == null) {
+                      formVals = value;
+                    } else {
+                      formVals[formValsKey] = value;
+                    }
+                    onKeyUp(value);
+                  });
+                } else {
+                  if (formValsKey == null) {
+                    formVals = value;
+                  } else {
+                    formVals[formValsKey] = value;
+                  }
+                  onKeyUp(value);
+                }
+              }
+            },
+          ),
+        ),
+        Container(
+          width: 45,
+          child: PopupMenuButton(
+            //initialValue: selectedMenu,
+            onSelected: (var value) {
+              if (formValsKey == null) {
+                formVals = value;
+              } else {
+                formVals[formValsKey] = value;
+              }
+              if (onChanged != null) {
+                onChanged(value);
+              }
+            },
+            itemBuilder: (BuildContext context) => items,
+            icon: Icon(Icons.expand_more),
+          ),
+        ),
+      ]
     );
   }
 

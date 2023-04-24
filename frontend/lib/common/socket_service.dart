@@ -9,75 +9,77 @@ class SocketService {
     return _instance;
   }
 
-  var _channel;
+  // One of each per server.
+  var _channels = {};
   var _callbacksByRoute = {};
-  var _auth = {
-    'user_id': '',
-    'session_id': '',
-  };
+  var _auth = {};
 
-  void connect(url) {
-    _channel = WebSocketChannel.connect(Uri.parse(url));
+  void connect(urlsMap) {
+    urlsMap.forEach((serverKey, url) {
+      _channels[serverKey] = WebSocketChannel.connect(Uri.parse(url));
 
-    _channel.stream.listen((message) {
-      handleMessage(message);
+      _channels[serverKey].stream.listen((message) {
+        handleMessage(message, serverKey);
+      });
+
+      _callbacksByRoute[serverKey] = {};
+      _auth[serverKey] = {
+        'user_id': '',
+        'session_id': '',
+      };
     });
   }
 
-  void handleMessage(message) {
+  void handleMessage(message, serverKey) {
     String resString = utf8.decode(message);
     var res = jsonDecode(resString);
-    //res['_auth'] = res['auth'];
     String resString1 = jsonEncode(res);
-    if (res.containsKey('route') && _callbacksByRoute.containsKey(res['route'])) {
-      for (var id in _callbacksByRoute[res['route']].keys) {
-        _callbacksByRoute[res['route']][id]['callback'](resString1);
+    if (res.containsKey('route') && _callbacksByRoute[serverKey].containsKey(res['route'])) {
+      for (var id in _callbacksByRoute[serverKey][res['route']].keys) {
+        _callbacksByRoute[serverKey][res['route']][id]['callback'](resString1);
       }
-      //_callbacksByRoute[res['route']].values.forEach((var cbObj) => {
-      //  cbObj['callback'](resString1);
-      //});
     }
   }
 
-  void disconnect() {
-    _channel.sink.close();
+  void disconnect(String serverKey) {
+    _channels[serverKey].sink.close();
   }
 
-  void emit(String route, var data) {
+  void emit(String route, var data, {String serverKey = 'default'}) {
     String message = jsonEncode({
       'route': route,
-      'auth': _auth,
+      'auth': _auth[serverKey],
       'data': data,
     });
-    _channel.sink.add(utf8.encode(message));
+    _channels[serverKey].sink.add(utf8.encode(message));
   }
 
-  String onRoute(String route, {Function(String)? callback}) {
-    if (!_callbacksByRoute.containsKey(route)) {
-      _callbacksByRoute[route] = {};
+  String onRoute(String route, {Function(String)? callback, String serverKey = 'default'}) {
+    if (!_callbacksByRoute[serverKey].containsKey(route)) {
+      _callbacksByRoute[serverKey][route] = {};
     }
     String id = new Random().nextInt(1000000).toString();
-    _callbacksByRoute[route][id] = {
+    _callbacksByRoute[serverKey][route][id] = {
       'callback': callback,
     };
     return id;
   }
 
-  void offRoute(String route, String id) {
-    if (_callbacksByRoute.containsKey(route)) {
-      _callbacksByRoute[route].remove(id);
+  void offRoute(String route, String id, {String serverKey = 'default'}) {
+    if (_callbacksByRoute[serverKey].containsKey(route)) {
+      _callbacksByRoute[serverKey][route].remove(id);
     }
   }
 
-  void offRouteIds(List<String> routeIds) {
+  void offRouteIds(List<String> routeIds, {String serverKey = 'default'}) {
     for (var ii = 0; ii < routeIds.length; ii++) {
     //routeIds.forEach((String routeId) =>
       String routeId = routeIds[ii];
-      for (String route in _callbacksByRoute.keys) {
+      for (String route in _callbacksByRoute[serverKey].keys) {
         bool found = false;
-        for (String id in _callbacksByRoute[route].keys) {
+        for (String id in _callbacksByRoute[serverKey][route].keys) {
           if (id == routeId) {
-            _callbacksByRoute[route].remove(id);
+            _callbacksByRoute[serverKey][route].remove(id);
             found = true;
             break;
           }
@@ -89,8 +91,9 @@ class SocketService {
     }
   }
 
-  void setAuth(String userId, String sessionId) {
-    _auth['user_id'] = userId;
-    _auth['session_id'] = sessionId;
+  void setAuth(String userId, String sessionId, {String serverKey = 'default'}) {
+    _auth[serverKey] = {};
+    _auth[serverKey]['user_id'] = userId;
+    _auth[serverKey]['session_id'] = sessionId;
   }
 }
