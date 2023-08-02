@@ -528,7 +528,7 @@ class _ImageSaveState extends State<ImageSaveComponent> {
     });
   }
 
-  void _getImages(String search, var currentUserState, { int lastPageNumber = 0 }) {
+  void _getImages(String search, var currentUserState) {
     String user_id_creator = '';
     if (formValsImageSave['from_type'] == 'myImages' && currentUserState.isLoggedIn) {
       user_id_creator = currentUserState.currentUser.id;

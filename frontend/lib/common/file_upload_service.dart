@@ -2,7 +2,6 @@ import 'dart:convert';
 //import 'dart:io';
 import 'dart:math';
 //import 'package:http/http.dart' as http;
-import 'package:file_picker/file_picker.dart';
 //import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import './socket_service.dart';

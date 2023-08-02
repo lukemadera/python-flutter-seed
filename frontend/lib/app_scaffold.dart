@@ -5,7 +5,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 import './modules/user_auth/current_user_state.dart';
 import './routes.dart';
-import './third-party/custom_icon_icons.dart';
 
 _launchURL(url) async {
   //const url = 'https://flutter.dev';
@@ -54,7 +53,7 @@ class _AppScaffoldState extends State<AppScaffoldComponent> {
         context.go(Routes.login);
       },
       style: ElevatedButton.styleFrom(
-        primary: Colors.white,
+        backgroundColor: Colors.white,
         minimumSize: Size.fromWidth(width),
         padding: EdgeInsets.all(0),
       ),
@@ -89,7 +88,7 @@ class _AppScaffoldState extends State<AppScaffoldComponent> {
         context.go(route);
       },
       style: ElevatedButton.styleFrom(
-        primary: Colors.white,
+        backgroundColor: Colors.white,
         minimumSize: Size.fromWidth(width),
         padding: EdgeInsets.all(0),
       ),
@@ -119,7 +118,7 @@ class _AppScaffoldState extends State<AppScaffoldComponent> {
             Scaffold.of(context).openEndDrawer();
           },
           style: ElevatedButton.styleFrom(
-            primary: Colors.white,
+            backgroundColor: Colors.white,
             minimumSize: Size.fromWidth(width),
             padding: EdgeInsets.all(0),
           ),

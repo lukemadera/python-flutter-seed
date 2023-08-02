@@ -172,8 +172,7 @@ class _InputFileState extends State<InputFile> {
           onPressed: () { _pickFile(); },
           child: Text(widget.hint),
           style: ElevatedButton.styleFrom(
-            primary: Colors.white,
-            onPrimary: Colors.grey.shade800,
+            foregroundColor: Colors.grey.shade800, backgroundColor: Colors.white,
           ),
         ),
         _buildFileChips(),

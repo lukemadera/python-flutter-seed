@@ -23,7 +23,7 @@ class AppGoRouter {
   GoRouter router = GoRouter(
     initialLocation: Routes.home,
     errorBuilder: (BuildContext context, GoRouterState state) {
-      String route = state.location;
+      String route = state.uri.toString();
       return RouteNotFoundPage(attemptedRoute: route);
     },
     routes: [

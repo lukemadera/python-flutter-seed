@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 //import 'package:flutter_multiselect/flutter_multiselect.dart';
 import 'package:intl/intl.dart';
-import 'package:multi_select_flutter/multi_select_flutter.dart';
+//import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 import './input_checkbox.dart';
 import '../parse_service.dart';
@@ -304,7 +304,9 @@ class InputFields {
           formVals[formValsKey] = value;
         }
       },
-      validator: (value) {},
+      validator: (value) {
+        return null;
+      },
     );
   }
 
