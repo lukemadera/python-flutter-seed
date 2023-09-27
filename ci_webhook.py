@@ -12,7 +12,7 @@ def Restart(doRestart = 1):
 
 def RestartIt():
     os.system("cd /var/www/seed_app && \
-        git checkout . && git pull origin master && \
+        git checkout . && git pull origin main && \
         pip3 install -r ./requirements.txt && \
         flutter upgrade && \
         cd frontend && flutter build web && cd ../ && \

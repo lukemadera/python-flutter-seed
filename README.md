@@ -65,7 +65,7 @@ Create accounts and add api keys in configs for each:
 
 ## Updates (should be done via CI)
 
-`git pull origin master`
+`git pull origin main`
 `pip3 install -r ./requirements.txt` (only necessary if updated requirements.txt)
 `cd frontend && flutter build web && cd ../`
 `systemctl restart systemd_web_server_seed_app.service`
