@@ -1,4 +1,4 @@
-package com.example.seed_app
+package com.example.seed-app
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -5,7 +5,7 @@ Python (with sockets) + MongoDB + Flutter
 
 ## Setup
 
-- Replace all instances of `seed_app`, `seed-app` and `seedApp` with the name / path of your app.
+- Replace all instances of `seed_app`, `com.example.seed-app` and `seedApp` with the name / path of your app.
 
 For (Ubuntu) script, see `server-setup.sh`
 
