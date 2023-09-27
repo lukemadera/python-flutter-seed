@@ -1,12 +1,12 @@
 class ImageClass {
-  String id, url, title, user_id_creator;
-  ImageClass(this.id, this.url, this.title, this.user_id_creator);
+  String id, url, title, userIdCreator;
+  ImageClass(this.id, this.url, this.title, this.userIdCreator);
   ImageClass.fromJson(Map<String, dynamic> json)
     :
       id = json['_id'],
       url = json['url'],
       title = json['title'],
-      user_id_creator = json['user_id_creator']
+      userIdCreator = json['userIdCreator']
     ;
 
   Map<String, dynamic> toJson() =>
@@ -14,7 +14,7 @@ class ImageClass {
       'id': id,
       'url': url,
       'title': title,
-      'user_id_creator': user_id_creator,
+      'userIdCreator': userIdCreator,
     };
 }
 
@@ -26,6 +26,6 @@ class ImageClass {
 //  //    id = json['_id'],
 //  //    url = json['url'],
 //  //    title = json['title'],
-//  //    user_id_creator = json['user_id_creator'],
+//  //    userIdCreator = json['userIdCreator'],
 //  //  ;
 //}

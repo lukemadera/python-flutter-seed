@@ -33,17 +33,17 @@ def routeIt(route, data, auth):
     admin = [
     ]
     if route in perms or route in userIdRequired or route in admin:
-        if len(auth['user_id']) == 0:
+        if len(auth['userId']) == 0:
             ret['msg'] = "Empty user id."
             return ret
 
     if route in perms or route in admin:
         allowed = 0
-        if "_" in auth['user_id']:
+        if "_" in auth['userId']:
             ret['msg'] = "Invalid user id"
             return ret
 
-        if permission_user.LoggedIn(auth['user_id'], auth['session_id']):
+        if permission_user.LoggedIn(auth['userId'], auth['sessionId']):
             allowed = 1
 
         if not allowed:
@@ -51,7 +51,7 @@ def routeIt(route, data, auth):
             return ret
 
     if route in admin:
-        if permission_user.IsAdmin(auth['user_id']):
+        if permission_user.IsAdmin(auth['userId']):
             allowed = 1
         else:
             ret['msg'] = "Admin privileges required"
@@ -74,31 +74,31 @@ def routeIt(route, data, auth):
 
     elif route == 'signup':
         roles = data['roles'] if 'roles' in data else ['student']
-        ret = user_auth.signup(data['email'], data['password'], data['first_name'], data['last_name'],
+        ret = user_auth.signup(data['email'], data['password'], data['firstName'], data['lastName'],
             roles)
         if ret['valid'] and 'user' in ret and ret['user']:
             # Join (to string) any nested fields for C# typings..
             if 'roles' in ret['user']:
                 # del ret['user']['roles']
                 ret['user']['roles'] = ",".join(ret['user']['roles'])
-            ret['_socketAdd'] = { 'user_id': ret['user']['_id'] }
+            ret['_socketAdd'] = { 'userId': ret['user']['_id'] }
 
     elif route == 'emailVerify':
-        ret = user_auth.emailVerify(data['email'], data['email_verification_key'])
+        ret = user_auth.emailVerify(data['email'], data['emailVerificationKey'])
         if ret['valid']:
             # Join (to string) any nested fields for C# typings..
             if 'roles' in ret['user']:
                 # del ret['user']['roles']
                 ret['user']['roles'] = ",".join(ret['user']['roles'])
-            ret['_socketAdd'] = { 'user_id': ret['user']['_id'] }
+            ret['_socketAdd'] = { 'userId': ret['user']['_id'] }
     elif route == 'passwordReset':
-        ret = user_auth.passwordReset(data['email'], data['password_reset_key'], data['password'])
+        ret = user_auth.passwordReset(data['email'], data['passwordResetKey'], data['password'])
         if ret['valid']:
             # Join (to string) any nested fields for C# typings..
             if 'roles' in ret['user']:
                 # del ret['user']['roles']
                 ret['user']['roles'] = ",".join(ret['user']['roles'])
-            ret['_socketAdd'] = { 'user_id': ret['user']['_id'] }
+            ret['_socketAdd'] = { 'userId': ret['user']['_id'] }
 
     elif route == 'login':
         ret = user_auth.login(data['email'], data['password'])
@@ -107,26 +107,26 @@ def routeIt(route, data, auth):
             if 'roles' in ret['user']:
                 # del ret['user']['roles']
                 ret['user']['roles'] = ",".join(ret['user']['roles'])
-            ret['_socketAdd'] = { 'user_id': ret['user']['_id'] }
+            ret['_socketAdd'] = { 'userId': ret['user']['_id'] }
 
     elif route == 'forgotPassword':
         ret = user_auth.forgotPassword(data['email'])
 
     elif route == 'getUserSession':
-        ret = user_auth.getSession(data['user_id'], data['session_id'])
+        ret = user_auth.getSession(data['userId'], data['sessionId'])
         if ret['valid']:
             # Join (to string) any nested fields for C# typings..
             if 'roles' in ret['user']:
                 ret['user']['roles'] = ",".join(ret['user']['roles'])
-            ret['_socketAdd'] = { 'user_id': ret['user']['_id'] }
+            ret['_socketAdd'] = { 'userId': ret['user']['_id'] }
 
     elif route == 'logout':
-        ret = user_auth.logout(data['user_id'], data['session_id'])
+        ret = user_auth.logout(data['userId'], data['sessionId'])
         # Logout all sockets for this user.
         if '_socketSendSeparate' not in ret:
             ret['_socketSendSeparate'] = []
         ret['_socketSendSeparate'].append({
-            'userIds': [ data['user_id'] ],
+            'userIds': [ data['userId'] ],
             'route': 'onLogout',
             'data': {
                 'valid': '1',
@@ -134,13 +134,13 @@ def routeIt(route, data, auth):
             }
         })
 
-        ret['_socketRemove'] = { 'user_id': data['user_id'] }
+        ret['_socketRemove'] = { 'userId': data['userId'] }
 
     elif route == "getImages":
         title = data['title'] if 'title' in data else ''
         url = data['url'] if 'url' in data else ''
-        user_id_creator = data['user_id_creator'] if 'user_id_creator' in data else ''
-        ret = _image.Get(title, url, user_id_creator, data['limit'], data['skip'])
+        userIdCreator = data['userIdCreator'] if 'userIdCreator' in data else ''
+        ret = _image.Get(title, url, userIdCreator, data['limit'], data['skip'])
         ret = formatRet(data, ret)
     elif route == "saveImage":
         ret = _image.Save(data['image'])
@@ -156,10 +156,10 @@ def routeIt(route, data, auth):
             maxSize = data['maxSize'] if 'maxSize' in data else 600
             ret = _file_upload.SaveImageData(data['fileData'], config['web_server']['urls']['base_server'],
                 maxSize = maxSize, removeOriginalFile = 1)
-            if ret['valid'] and saveToUserImages and len(auth['user_id']) > 0:
+            if ret['valid'] and saveToUserImages and len(auth['userId']) > 0:
                 title = data['title'] if 'title' in data else ''
                 if len(title) > 0:
-                    userImage = { 'url': ret['url'], 'title': title, 'user_id_creator': auth['user_id'] }
+                    userImage = { 'url': ret['url'], 'title': title, 'userIdCreator': auth['userId'] }
                     retUserImage = _image.Save(userImage)
                     ret['userImage'] = formatRet(data, retUserImage)
         else:
@@ -168,7 +168,7 @@ def routeIt(route, data, auth):
         ret = _file_upload.SaveImageData(data['fileData'], config['web_server']['urls']['base_server'], removeOriginalFile = 1)
 
     elif route == "getUserById":
-        user = user_auth.getById(data['user_id'])
+        user = user_auth.getById(data['userId'])
         ret['valid'] = '1'
         ret['user'] = user
         ret = formatRet(data, ret)

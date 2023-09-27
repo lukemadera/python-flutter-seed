@@ -52,7 +52,7 @@ class CurrentUserState extends ChangeNotifier {
   void setCurrentUser(var user) {
     _currentUser = user;
     _isLoggedIn = true;
-    _socketService.setAuth(user.id, user.session_id);
+    _socketService.setAuth(user.id, user.sessionId);
 
     getLocalstorage();
     _localstorage?.setItem('currentUser', _currentUser.toJson());
@@ -76,14 +76,14 @@ class CurrentUserState extends ChangeNotifier {
     var user = _localstorage?.getItem('currentUser');
     if (user != null) {
       _status = "loading";
-      _socketService.emit('getUserSession', { 'user_id': user['id'], 'session_id': user['session_id'] });
+      _socketService.emit('getUserSession', { 'userId': user['id'], 'sessionId': user['sessionId'] });
     }
   }
 
   void logout() {
     if (_currentUser != null) {
       _status = "loading";
-      _socketService.emit('logout', { 'user_id': _currentUser.id, 'session_id': _currentUser.session_id });
+      _socketService.emit('logout', { 'userId': _currentUser.id, 'sessionId': _currentUser.sessionId });
     }
   }
 

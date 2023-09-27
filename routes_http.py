@@ -32,12 +32,12 @@ async def CIWebhook(request):
 
 async def GetUserSession(request):
     data = await request.json()
-    ret = user_auth.getSession(data['user_id'], data['session_id'])
+    ret = user_auth.getSession(data['userId'], data['sessionId'])
     if ret['valid']:
         # Join (to string) any nested fields for C# typings..
         if 'roles' in ret['user']:
             ret['user']['roles'] = ",".join(ret['user']['roles'])
-        ret['_socketAdd'] = { 'user_id': ret['user']['_id'] }
+        ret['_socketAdd'] = { 'userId': ret['user']['_id'] }
 
     return web.json_response(ret)
 

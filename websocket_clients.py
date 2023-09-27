@@ -2,7 +2,7 @@
 # If the same user is connected multiple times (e.g. from multiple devices or
 # browsers) then there will be multiple websockets per that user.
 # _wsUsers = {
-#     'user_id1': {
+#     'userId1': {
 #         'sockets': [
 #             {
 #                 'ws': ws1,
@@ -14,7 +14,7 @@
 #             }
 #         ]
 #     },
-#     'user_id2': {
+#     'userId2': {
 #         'sockets': []
 #     }
 # }

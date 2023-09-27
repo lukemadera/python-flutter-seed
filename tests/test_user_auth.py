@@ -5,8 +5,8 @@ import stubs_user as _stubs_user
 def test_signup():
     _mongo_mock.InitAllCollections()
     # _mongo_mock.GetCollection('user')
-    user = { 'email': 'joe@email.com', 'password': 'pass1', 'first_name': 'Joe', 'last_name': 'Johnson' }
-    retUser = _user_auth.signup(user['email'], user['password'], user['first_name'], user['last_name'])
+    user = { 'email': 'joe@email.com', 'password': 'pass1', 'firstName': 'Joe', 'lastName': 'Johnson' }
+    retUser = _user_auth.signup(user['email'], user['password'], user['firstName'], user['lastName'])
     retGet = _user_auth.getByEmail(user['email'])
     assert retGet['_id'] == retUser['user']['_id']
     assert retGet['email'] == user['email']
@@ -21,5 +21,5 @@ def test_updateFirstLastName():
     retNewUser = _user_auth.updateFirstLastName(user, firstName, lastName)['user']
     assert retNewUser['_id'] == retUser['user']['_id']
     assert retNewUser['email'] == user['email']
-    assert retNewUser['first_name'] == firstName
-    assert retNewUser['last_name'] == lastName
+    assert retNewUser['firstName'] == firstName
+    assert retNewUser['lastName'] == lastName

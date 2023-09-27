@@ -106,8 +106,8 @@ class _UserSignupState extends State<UserSignupComponent> {
                   children: <Widget>[
                     _inputFields.inputEmail(context, formVals, 'email'),
                     _inputFields.inputPassword(context, formVals, 'password', minLen: 6),
-                    _inputFields.inputText(context, formVals, 'first_name', minLen: 2, label: 'First Name'),
-                    _inputFields.inputText(context, formVals, 'last_name', minLen: 2, label: 'Last Name'),
+                    _inputFields.inputText(context, formVals, 'firstName', minLen: 2, label: 'First Name'),
+                    _inputFields.inputText(context, formVals, 'lastName', minLen: 2, label: 'Last Name'),
                     _buildSubmit(context),
                     _buildMessage(context),
                     TextButton(

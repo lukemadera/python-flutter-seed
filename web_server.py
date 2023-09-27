@@ -78,11 +78,11 @@ async def websocket_handler(request):
 
                 # Handle socket connections.
                 if '_socketAdd' in retData:
-                    _websocket_clients.AddClient(retData['_socketAdd']['user_id'], ws)
+                    _websocket_clients.AddClient(retData['_socketAdd']['userId'], ws)
                     del retData['_socketAdd']
                 if '_socketGroupAdd' in retData:
                     _websocket_clients.AddUsersToGroup(retData['_socketGroupAdd']['group_name'],
-                        retData['_socketGroupAdd']['user_ids'])
+                        retData['_socketGroupAdd']['userIds'])
                     del retData['_socketGroupAdd']
 
                 if '_socketSendSeparate' in retData:
@@ -99,7 +99,7 @@ async def websocket_handler(request):
 
                 # Must be after send, in case want to send a message before remove.
                 if '_socketRemove' in retData:
-                    _websocket_clients.RemoveClientsByUser(retData['_socketRemove']['user_id'])
+                    _websocket_clients.RemoveClientsByUser(retData['_socketRemove']['userId'])
                     del retData['_socketRemove']
 
                 # See if should send to multiple connections.

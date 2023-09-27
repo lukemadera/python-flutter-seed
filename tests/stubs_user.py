@@ -7,15 +7,15 @@ _users = [
     {
         'email': 'bob@earthshot.eco',
         'password': 'pass12',
-        'first_name': 'Bob',
-        'last_name': 'Johnson',
+        'firstName': 'Bob',
+        'lastName': 'Johnson',
         'roles': ['']
     },
     {
         'email': 'alice@earthshot.eco',
         'password': 'pass23',
-        'first_name': 'Alice',
-        'last_name': 'Souza',
+        'firstName': 'Alice',
+        'lastName': 'Souza',
         'roles': ['']
     }
 ]
@@ -25,8 +25,8 @@ def GetInvestorUser():
   return {
     'email': 'sarah@vc.eco',
     'password': 'pass23',
-    'first_name': 'Sarah',
-    'last_name': 'Investor',
+    'firstName': 'Sarah',
+    'lastName': 'Investor',
     'roles': ['investor']
   }
 
@@ -36,8 +36,8 @@ def GetProponentUser():
   return {
     'email': 'andrew@proponent.ngo',
     'password': 'pass23',
-    'first_name': 'Andrew',
-    'last_name': 'Proponent',
+    'firstName': 'Andrew',
+    'lastName': 'Proponent',
     'roles': ['']
   }
 
@@ -46,7 +46,7 @@ def GetAll():
     return _users
 
 def CreateUser(user):
-    return _user_auth.signup(user['email'], user['password'], user['first_name'], user['last_name'], user['roles'])
+    return _user_auth.signup(user['email'], user['password'], user['firstName'], user['lastName'], user['roles'])
 
 def DeleteAll():
     mongo_db.delete_many('user', {})

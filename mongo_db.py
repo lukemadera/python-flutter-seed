@@ -79,9 +79,9 @@ def insert_one(collection_name, obj1, db1 = None):
     collection = get_collection(collection_name, db)
 
     # Add timestamp
-    obj1['created_at'] = date_time.now_string()
+    obj1['createdAt'] = date_time.now_string()
     # obj = lodash.extend_object({
-    #     'created_at': date_time.now_string()
+    #     'createdAt': date_time.now_string()
     # }, obj1);
 
     inserted_id = from_object_id(collection.insert_one(obj1).inserted_id)
@@ -97,7 +97,7 @@ def insert_many(collection_name, objects, db1 = None):
 
     # Add timestamp
     for index, obj1 in enumerate(objects):
-        objects[index]['created_at'] = date_time.now_string()
+        objects[index]['createdAt'] = date_time.now_string()
 
     inserted_ids = collection.insert_many(objects).inserted_ids
     for index, obj1 in enumerate(objects):
@@ -113,10 +113,10 @@ def update_one(collection_name, query, mutation, upsert = False, db1 = None):
     # Add timestamp
     now_string = date_time.now_string()
     if '$set' in mutation:
-        mutation['$set']['updated_at'] = now_string
+        mutation['$set']['updatedAt'] = now_string
     if '$setOnInsert' not in mutation:
         mutation['$setOnInsert'] = {}
-    mutation['$setOnInsert']['created_at'] = date_time.now_string()
+    mutation['$setOnInsert']['createdAt'] = date_time.now_string()
 
     # Unclear on result - modified_count can be 0 if matched and no changes?
     # So need to just check acknowledged for success? Or a combination of matched count
@@ -136,7 +136,7 @@ def update_many(collection_name, query, mutation, db1 = None):
 
     # TODO - Add timestamp
     # for index, obj1 in enumerate(objects):
-    #     objects[index]['updated_at'] = date_time.now_string()
+    #     objects[index]['updatedAt'] = date_time.now_string()
 
     result = collection.update_many(query, mutation)
     return {

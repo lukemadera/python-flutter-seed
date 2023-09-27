@@ -6,4 +6,4 @@ def create_all_indices(db):
         ('username', pymongo.ASCENDING)], unique=True)
 
     db['image'].create_index([('title', pymongo.ASCENDING), \
-        ('url', pymongo.ASCENDING), ('user_id_creator', pymongo.ASCENDING)], unique=True)
+        ('url', pymongo.ASCENDING), ('userIdCreator', pymongo.ASCENDING)], unique=True)

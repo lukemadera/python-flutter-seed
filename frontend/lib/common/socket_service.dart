@@ -24,8 +24,8 @@ class SocketService {
 
       _callbacksByRoute[serverKey] = {};
       _auth[serverKey] = {
-        'user_id': '',
-        'session_id': '',
+        'userId': '',
+        'sessionId': '',
       };
     });
   }
@@ -93,7 +93,7 @@ class SocketService {
 
   void setAuth(String userId, String sessionId, {String serverKey = 'default'}) {
     _auth[serverKey] = {};
-    _auth[serverKey]['user_id'] = userId;
-    _auth[serverKey]['session_id'] = sessionId;
+    _auth[serverKey]['userId'] = userId;
+    _auth[serverKey]['sessionId'] = sessionId;
   }
 }

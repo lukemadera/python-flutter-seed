@@ -529,9 +529,9 @@ class _ImageSaveState extends State<ImageSaveComponent> {
   }
 
   void _getImages(String search, var currentUserState) {
-    String user_id_creator = '';
+    String userIdCreator = '';
     if (formValsImageSave['from_type'] == 'myImages' && currentUserState.isLoggedIn) {
-      user_id_creator = currentUserState.currentUser.id;
+      userIdCreator = currentUserState.currentUser.id;
     }
     int limit = 20;
     // TODO - handle paging / load more (update backend to return count).
@@ -539,7 +539,7 @@ class _ImageSaveState extends State<ImageSaveComponent> {
       'limit': limit,
       'skip': (_lastPageNumberImages - 1) * limit,
       'title': search,
-      'user_id_creator': user_id_creator,
+      'userIdCreator': userIdCreator,
     };
     _socketService.emit('getImages', dataSend);
 

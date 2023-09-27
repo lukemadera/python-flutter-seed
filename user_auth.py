@@ -21,13 +21,13 @@ def check_encrypted_password(password, hashed):
 def getUserFields():
     return {
         'email': True,
-        'first_name': True,
-        'last_name': True,
+        'firstName': True,
+        'lastName': True,
         'status': True,
         'roles': True,
         'username': True,
-        'created_at': True,
-        'updated_at': True,
+        'createdAt': True,
+        'updatedAt': True,
     }
 
 def checkEmail(email, fields=None):
@@ -102,13 +102,13 @@ def signup(email, password, firstName, lastName, roles=[''], autoMember=1):
         mutation = {
             '$set': {
                 'password': encrypt_password(password),
-                'first_name': firstName,
-                'last_name': lastName,
-                'password_reset_key': lodash.random_string(6),
+                'firstName': firstName,
+                'lastName': lastName,
+                'passwordResetKey': lodash.random_string(6),
                 'status': status,
                 'roles': roles,
-                'email_verification_key': emailVerifyKey,
-                'email_verified': 0
+                'emailVerificationKey': emailVerifyKey,
+                'emailVerified': 0
             }
         }
         if autoMember:
@@ -129,7 +129,7 @@ def signup(email, password, firstName, lastName, roles=[''], autoMember=1):
                 user = getById(result['upserted_id'])
                 retSess = updateSession(user['_id'])
                 if 'sessionId' in retSess:
-                    user['session_id'] = retSess['sessionId']
+                    user['sessionId'] = retSess['sessionId']
                     ret['user'] = user
                     ret['valid'] = 1
     else:
@@ -153,7 +153,7 @@ def login(emailOrUsername, password):
         if check_encrypted_password(password, user['password']):
             retSess = updateSession(user['_id'])
             if 'sessionId' in retSess:
-                user['session_id'] = retSess['sessionId']
+                user['sessionId'] = retSess['sessionId']
                 del user['password']
                 ret['user'] = user
                 ret['valid'] = 1
@@ -178,11 +178,11 @@ def logout(userId, sessionId=""):
     }
     mutation = {
         # '$pull': {
-        #     'session_ids': sessionId
+        #     'sessionIds': sessionId
         # }
         # Clear out ALL sessions on logout.
         '$set': {
-            'session_ids': []
+            'sessionIds': []
         }
     }
     result = mongo_db.update_one('user', query, mutation)
@@ -198,7 +198,7 @@ def updateSession(userId):
     }
     mutation = {
         '$push': {
-            'session_ids': sessionId
+            'sessionIds': sessionId
         }
     }
     result = mongo_db.update_one('user', query, mutation)
@@ -212,7 +212,7 @@ def getSession(userId, sessionId):
     ret = { 'valid': 0, 'msg': '', 'user': {} }
     query = {
         '_id': mongo_db.to_object_id(userId),
-        'session_ids': {
+        'sessionIds': {
             '$in': [
                 sessionId
             ]
@@ -223,7 +223,7 @@ def getSession(userId, sessionId):
     if user is not None and '_id' in user:
         ret['user'] = user
         ret['valid'] = 1
-        ret['user']['session_id'] = sessionId
+        ret['user']['sessionId'] = sessionId
     return ret
 
 def forgotPassword(email):
@@ -238,7 +238,7 @@ def forgotPassword(email):
         }
         mutation = {
             '$set': {
-                'password_reset_key': resetKey
+                'passwordResetKey': resetKey
             }
         }
         result = mongo_db.update_one('user', query, mutation)
@@ -256,7 +256,7 @@ def passwordReset(email, passwordResetKey, newPassword):
     email = email.lower()
     query = {
         'email': email,
-        'password_reset_key': passwordResetKey
+        'passwordResetKey': passwordResetKey
     }
     fields = getUserFields()
     user = mongo_db.find_one('user', query, fields=fields)['item']
@@ -268,14 +268,14 @@ def passwordReset(email, passwordResetKey, newPassword):
             '$set': {
                 'password': encrypt_password(newPassword),
                 # Change password reset key so can not be used again.
-                'password_reset_key': lodash.random_string(6)
+                'passwordResetKey': lodash.random_string(6)
             }
         }
         result = mongo_db.update_one('user', query, mutation)
         if result:
             retSess = updateSession(user['_id'])
             if 'sessionId' in retSess:
-                user['session_id'] = retSess['sessionId']
+                user['sessionId'] = retSess['sessionId']
                 ret['user'] = user
                 ret['valid'] = 1
     else:
@@ -288,20 +288,20 @@ def emailVerify(email, verifyKey):
     email = email.lower()
     query = {
         'email': email,
-        'email_verification_key': verifyKey
+        'emailVerificationKey': verifyKey
     }
     fields = getUserFields()
     user = mongo_db.find_one('user', query, fields=fields)['item']
     if user:
         # Create unique username
-        username = createUsername(user['first_name'], user['last_name'])['username']
+        username = createUsername(user['firstName'], user['lastName'])['username']
         query = {
             '_id': mongo_db.to_object_id(user['_id'])
         }
         mutation = {
             '$set': {
-                'email_verification_key': lodash.random_string(6),
-                'email_verified': 1,
+                'emailVerificationKey': lodash.random_string(6),
+                'emailVerified': 1,
                 'status': 'member',
                 'username': username
             }
@@ -310,7 +310,7 @@ def emailVerify(email, verifyKey):
         if result:
             retSess = updateSession(user['_id'])
             if 'sessionId' in retSess:
-                user['session_id'] = retSess['sessionId']
+                user['sessionId'] = retSess['sessionId']
                 ret['user'] = user
                 ret['valid'] = 1
     return ret
@@ -360,15 +360,15 @@ def updateFirstLastName(user, firstName, lastName):
 
     mutation = {
             '$set': {
-                'first_name': firstName,
-                'last_name': lastName,
+                'firstName': firstName,
+                'lastName': lastName,
             }
         }
     result = mongo_db.update_one('user', query, mutation)
     if result:
         retSess = updateSession(user['_id'])
         if 'sessionId' in retSess:
-            user['session_id'] = retSess['sessionId']
+            user['sessionId'] = retSess['sessionId']
             ret['user'] = mongo_db.find_one('user', query, fields = getUserFields())['item']
             ret['valid'] = 1
     else:
