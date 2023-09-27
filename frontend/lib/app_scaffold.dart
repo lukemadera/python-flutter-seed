@@ -48,11 +48,11 @@ class _AppScaffoldState extends State<AppScaffoldComponent> {
     if (currentUserState.isLoggedIn) {
       return SizedBox.shrink();
     }
-    return ElevatedButton(
+    return TextButton(
       onPressed: () {
         context.go(Routes.login);
       },
-      style: ElevatedButton.styleFrom(
+      style: TextButton.styleFrom(
         backgroundColor: Colors.white,
         minimumSize: Size.fromWidth(width),
         padding: EdgeInsets.all(0),
@@ -83,11 +83,11 @@ class _AppScaffoldState extends State<AppScaffoldComponent> {
   }
 
   Widget _buildNavButton(String route, String text, IconData icon, BuildContext context, { double width = 100, double fontSize = 13 }) {
-    return ElevatedButton(
+    return TextButton(
       onPressed: () {
         context.go(route);
       },
-      style: ElevatedButton.styleFrom(
+      style: TextButton.styleFrom(
         backgroundColor: Colors.white,
         minimumSize: Size.fromWidth(width),
         padding: EdgeInsets.all(0),
@@ -113,11 +113,11 @@ class _AppScaffoldState extends State<AppScaffoldComponent> {
   Widget _buildDrawerButton(BuildContext context, { double width = 100, double fontSize = 13 }) {
     return Builder(
       builder: (BuildContext context) {
-        return ElevatedButton(
+        return TextButton(
           onPressed: () {
             Scaffold.of(context).openEndDrawer();
           },
-          style: ElevatedButton.styleFrom(
+          style: TextButton.styleFrom(
             backgroundColor: Colors.white,
             minimumSize: Size.fromWidth(width),
             padding: EdgeInsets.all(0),
@@ -200,16 +200,17 @@ class _AppScaffoldState extends State<AppScaffoldComponent> {
             ...rows,
           ]
         ),
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.shade300,
-              spreadRadius: 2,
-              blurRadius: 4,
-              offset: Offset(0, 0),
-            )
-          ]
-        ),
+        color: Colors.white,
+        // decoration: BoxDecoration(
+        //   boxShadow: [
+        //     BoxShadow(
+        //       color: Colors.grey.shade300,
+        //       spreadRadius: 2,
+        //       blurRadius: 4,
+        //       offset: Offset(0, 0),
+        //     )
+        //   ]
+        // ),
       )
     );
   }
@@ -221,7 +222,7 @@ class _AppScaffoldState extends State<AppScaffoldComponent> {
         children: <Widget>[
           _buildHeader(context, currentUserState),
           // For drop shadow, otherwise it is cut off.
-          SizedBox(height: 5),
+          // SizedBox(height: 5),
           Expanded(
             child: Container(
               color: Colors.white,

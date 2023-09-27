@@ -8,8 +8,8 @@ cd /var && mkdir www && cd /var/www && \
     # Install python3 and pip3
     apt-get -y update && apt-get -y upgrade && python3 -V && apt -y install python3-pip && \
     # Clone repo
-git clone https://$GITHUB_TOKEN@github.com/lukemadera/seed-app.git && \
-    cd seed-app
+git clone https://$GITHUB_TOKEN@github.com/lukemadera/seed_app.git && \
+    cd seed_app
 
 # Update configs and copy prod version to server.
     # `config.yml` - e.g. set port to 443 (for SSL), enable SSL, add paths to SSL cert files.
