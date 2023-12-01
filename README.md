@@ -50,6 +50,7 @@ Create accounts and add api keys in configs for each:
 ## Tests
 
 - `python -m pytest`
+- `cd frontend` then `flutter test`
 
 
 ## Rebuilding Mobile
